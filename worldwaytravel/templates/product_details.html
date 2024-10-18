@@ -1,0 +1,155 @@
+{% extends 'layout.html' %} {% block title %} {% endblock %} {% block
+content %}
+
+<div class="bg-white">
+  <div class="pt-6">
+    <nav aria-label="Breadcrumb">
+      <ol
+        role="list"
+        class="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+      >
+        <li>
+          <div class="flex items-center">
+            <a href="#" class="mr-2 text-sm font-medium text-gray-900"
+              >{{product_detail[7]}}</a
+            >
+            <svg
+              width="16"
+              height="20"
+              viewBox="0 0 16 20"
+              fill="currentColor"
+              aria-hidden="true"
+              class="h-5 w-4 text-gray-300"
+            >
+              <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+            </svg>
+          </div>
+        </li>
+
+        <li class="text-sm">
+          <a
+            href="#"
+            aria-current="page"
+            class="font-medium text-gray-500 hover:text-gray-600"
+            >{{product_detail[1]}}</a
+          >
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Product info -->
+    <div
+      class="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16"
+    >
+      <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+          {{product_detail[1]}}
+        </h1>
+      </div>
+
+      <!-- Options -->
+      <div class="mt-4 lg:row-span-3 lg:mt-0">
+        <h2 class="sr-only">Product information</h2>
+        <div
+          class="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg"
+        >
+          <img
+            src="{{ url_for('static', filename='producting/' + product_detail[4]) }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center"
+          />
+        </div>
+        <p class="text-3xl tracking-tight text-gray-900">
+          {% set original_price = product_detail[2] | float %}
+          {% set discount = product_detail[8].replace('%', '') | float if product_detail[8] and product_detail[8] != 'None' else 0 %}
+          {% set discounted_price = original_price * (1 - discount / 100) %}
+          {% if discount > 0 %}
+            <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+          {% else %}
+          <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span> 
+          {% endif %}
+          <span style="font-size: 0.8em;">NZD</span>
+        </p>
+        <form method="POST" action="{{ url_for('customer.add_to_cart')}}">
+          <div class="mt-4">
+            <label
+              for="quantity"
+              class="block text-sm font-medium text-gray-700"
+              >Quantity:</label
+            >
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              value="1"
+              min="1"
+              max="{{product_detail[5]}}"
+              oninput="checkQuantity()"
+              class="mt-1 focus:ring-black focus:border-black block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            />
+          </div>
+          <input
+            type="hidden"
+            name="product_id"
+            value="{{ product_detail[0] }}"
+          />
+
+          {% if 'loggedin' not in session or session['role'] != 'Customer' %}
+          <button
+            type="submit"
+            class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white cursor-not-allowed opacity-50 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+            disabled
+          >
+            Add to bag
+          </button>
+          <p class="mt-2 text-sm text-gray-500">
+            You must be a registered customer to add items to your cart.
+          </p>
+          {% else %}
+          <button
+            type="submit"
+            class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+          >
+            Add to bag
+          </button>
+          {% endif %}
+        </form>
+      </div>
+
+      <div
+        class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6"
+      >
+        <!-- Description and details -->
+        <div>
+          <h3 class="sr-only">Description</h3>
+
+          <div class="space-y-6">
+            <p class="text-base text-gray-900">{{product_detail[3]}}</p>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <h2 class="text-sm font-medium text-gray-900">Product Details</h2>
+        <img
+            src="{{ url_for('static', filename='producting/product_details/' + product_detail[4]) }}"
+            alt="Product Detail"
+            class="h-full w-full object-cover object-center"
+          />
+{#          <div class="mt-4 space-y-6">#}
+{#            <p class="text-sm text-gray-600">{{product_detail[10]}} ${{product_detail[11]}} (Orders are ideally ready within three days)</p>#}
+{#          </div>#}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function checkQuantity() {
+    var input = document.getElementById("quantity")
+    var max = parseInt(input.getAttribute("max"))
+    if (parseInt(input.value) > max) {
+      input.value = max
+    }
+  }
+</script>
+{% endblock %}

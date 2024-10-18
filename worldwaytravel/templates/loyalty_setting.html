@@ -1,0 +1,73 @@
+{% extends 'layout.html' %} {% block content %}
+
+<div class="function-container">
+  <h2 class="text-center mb-4">Loyalty Settings</h2>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Setting</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for setting in settings %}
+        <tr>
+          <td>{{ setting.setting }}</td>
+          <td>{{ setting.value }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-5">
+    <h2 class="mb-4">Update Setting</h2>
+    <form action="{{ url_for('update_loyalty_setting') }}" method="post">
+      <div class="form-group">
+        <label for="setting">Setting:</label>
+        <select class="form-control" name="setting" id="setting">
+          {% for setting in settings %}
+          <option value="{{ setting.setting }}">{{ setting.setting }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="value">New Value:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="value"
+          id="value"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <div class="mt-4">
+    <ul class="list-group">
+      {% for category, message in messages %}
+      <li class="list-group-item list-group-item-{{ category }}">
+        {{ message }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %} {% endwith %}
+</div>
+<p class="text-gray-500 mt-4">
+  Earning Points<br />
+  Earning Point Value (earning_point): This value indicates how many points are
+  earned for every amount spent. For example, if earning_point is set to 1, the
+  user will earn 1 point for every $1 spent.<br />
+
+  Redemption Points (redemption): This value indicates the number of points
+  required to redeem a reward. For example, if redemption is set to 1000, the
+  user will need 1000 points to redeem a reward.
+</p>
+{% endblock %}

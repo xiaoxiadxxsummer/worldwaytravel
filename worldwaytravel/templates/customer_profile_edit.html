@@ -1,0 +1,133 @@
+{% extends "layout.html" %} {% block content %}
+<body>
+  <div class="function-container">
+    <div class="row justify-content-center">
+      <div class = "col-md-6">
+      <div class="text-center">
+        <h1>Edit profile</h1>
+        <br />
+      </div>
+      <form
+        action="{{ url_for('customer.profile_edit')}}"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div class="mb-3">
+          <div class="msg">{{ msg }}</div>
+          <label for="username"><b>Username:</b></label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            value="{{account[1]}}"
+          />
+          <!-- Use 'pattern' to add some validations -->
+          <label for="customer_title"><b>Title:</b></label>
+          <select id="customer_title" name="customer_title"             class="form-control">
+            <option value="Mr" {% if customer_info[3] == 'Mr' %} selected {% endif %}>Mr</option>
+            <option value="Mrs" {% if customer_info[3] == 'Mrs' %} selected {% endif %}>Mrs</option>
+            <option value="Miss" {% if customer_info[3] == 'Miss' %} selected {% endif %}>Miss</option>
+            <option value="Ms" {% if customer_info[3] == 'Ms' %} selected {% endif %}>Ms</option>
+          </select>
+
+          <label for="firstname"><b>Firstname:</b></label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstname"
+            name="firstname"
+            value="{{customer_info[1] }}"
+            pattern="[a-zA-Z]+"
+            title="Invalid Firstname!"
+            required
+          />
+
+          <label for="lastname"><b>Lastname:</b></label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastname"
+            name="lastname"
+            value="{{ customer_info[2] }}"
+            pattern="[a-zA-Z]+"
+            title="Invalid Lastname!"
+            required
+          />
+
+          <label for="date_birth"><b>Date of Birth:</b></label>
+          <input
+            type="date"
+            class="form-control"
+            id="date_birth"
+            name="date_birth"
+            value="{{ customer_info[4] }}"
+          />
+
+          <label for="email"><b>Email Address:</b></label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            value="{{ customer_info[5] }}"
+            required
+          />
+
+          <label for="phone"><b>Phone Number:</b></label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phone"
+            name="phone"
+            value="{{ customer_info[6] }}"
+          />
+
+          <label for="address"><b>Passport:</b></label>
+          <input
+            type="text"
+            class="form-control"
+            id="address"
+            name="address"
+            value="{{ customer_info[7] }}"
+            required
+          />
+        </div>
+
+        <label for="image_url" class="form-label"><b>Profile Image</b></label>
+        <input
+          type="file"
+          class="form-control"
+          id="image_url"
+          name="image_url"
+        />
+
+        <div style="height: 10px"></div>
+        <div class="text-center">
+        <button type="submit" class="btn btn-primary" style="background-color: #000;border-color: #000;">Submit</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="window.history.back();"
+        >
+          Cancel
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+  <script>
+    document.querySelector("form").addEventListener("submit", function (event) {
+      var phoneInput = document.getElementById("phone")
+      var phonePattern = /^(0[2-9]\d{2}-?\d{3}-?\d{3}|0[2-9]\d{8})$/
+
+      if (!phonePattern.test(phoneInput.value)) {
+        event.preventDefault()
+        document.querySelector(".msg").innerText =
+          "Invalid phone number format. Please enter a valid New Zealand phone number."
+      }
+    })
+  </script>
+  {% endblock %}
+</body>

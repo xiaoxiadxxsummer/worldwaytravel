@@ -1,0 +1,216 @@
+<!-- manager_dashboard.html -->
+{% extends 'layout.html' %} {% block title %}Manager Dashboard{% endblock %} {%
+block content %}
+<h2 style="text-align: center">Welcome to Your Dashboard</h2>
+<div>
+  <h3>Your profile details:</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table">
+        <tr>
+          <td>Username:</td>
+          <td>{{ manager_info[1] }}</td>
+        </tr>
+        <tr>
+          <td>Title:</td>
+          <td>{{ manager_profile[3] }}</td>
+        </tr>
+        <tr>
+          <td>First Name:</td>
+          <td>{{ manager_profile[1] }}</td>
+        </tr>
+        <tr>
+          <td>Last Name:</td>
+          <td>{{ manager_profile[2] }}</td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>{{ manager_profile[5] }}</td>
+        </tr>
+        <tr>
+          <td>Phone Number:</td>
+          <td>{{ manager_profile[6] }}</td>
+        </tr>
+        <tr>
+          <td>Status:</td>
+          <td>
+            {{ "Active" if manager_profile[8] == 'Active' else "Inactive" }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 text-center">
+      {% if manager_profile[7] %} {% if
+      manager_profile[7].startswith('uploads/') %}
+
+      <img
+        src="{{ url_for('static', filename=manager_profile[7]) }}"
+        alt="Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/' + manager_profile[7]) }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %} {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/profile.jpg') }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %}
+    </div>
+  </div>
+    <div class="col-auto">
+        <a
+          href="{{ url_for('manager.manager_profile_edit')}}"
+          class="btn btn-primary"
+          >Edit My Profile</a
+        >
+      </div>
+</div>
+
+<div>
+  <!--Profile card-->
+  <div class="row mt-4">
+    {#<div class="col-md-4">
+      <a href="{{ url_for('manager.manager_profile') }}" class="card-link">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-user" style="font-size: 2rem"></i>My Profile</h5>
+            <p class="card-text">View and update profile information and change password.</p>
+          </div>
+        </div>
+      </a>
+    </div>#}
+      <div class="col-md-4">
+              <a href="{{ url_for('administrator.manage_category') }}" class="card-link">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-list-alt" style="font-size: 2rem"></i> Manage Category</h5>
+                    <p class="card-text">Add, view, update, and delete categories efficiently and effectively.</p>
+                  </div>
+                </div>
+              </a>
+      </div>    
+  <!--Product card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('staff.staff_products') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-boxes" style="font-size: 2rem"></i>Products</h5>
+          <p class="card-text">View and update product details such as price, descriptions, and images.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {#<!--Order card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('staff.orders') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-shopping-cart" style="font-size: 2rem"></i>Customer Orders</h5>
+          <p class="card-text">View and manage customer orders.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <!--Manage customer card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('manager.manage_customer') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-user-cog" style="font-size: 2rem"></i>Manage Customers</h5>
+          <p class="card-text">Add, view, update, and active/inactive customer accounts.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <!--Manage staff card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('manager.manage_staff') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-user-tie" style="font-size: 2rem"></i>Manage Staff</h5>
+          <p class="card-text">Add, view, update, and active/inactive staff accounts.</p>
+        </div>
+      </div>
+    </a>
+  </div>#}
+  <!--Inventory card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('staff.staff_inventory') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-warehouse" style="font-size: 2rem"></i>Seating Numbers</h5>
+          <p class="card-text">View and update travel product seating number.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {#<!--Manage Account card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('manager.manage_account') }}"  class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-user-cog" style="font-size: 2rem"></i>Manage Account</h5>
+          <p class="card-text">View and edit customer account.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <!--Manage Points card-->
+  <div class="col-md-4">
+    <a href="/manager/loyalty_setting" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-trophy" style="font-size: 2rem"></i>Manage Points</h5>
+          <p class="card-text">View and edit customer points.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <!--Manage Credit Limit card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('manager.manage_credit') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-credit-card" style="font-size: 2rem"></i>Manage Credit Limit</h5>
+          <p class="card-text">View and reply credit apply from customers.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <!--Message card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('staff.view_messages') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i>Messages</h5>
+          <p class="card-text">View and reply messages from customers.</p>
+        </div>
+      </div>
+    </a>
+  </div>#}
+  <!--Reports card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('manager.customer_report') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-chart-line" style="font-size: 2rem"></i>Reports</h5>
+          <p class="card-text">Generate reports on revenue and product preferences.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+
+
+</div>
+
+{% endblock %}

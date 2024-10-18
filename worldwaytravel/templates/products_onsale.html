@@ -1,0 +1,67 @@
+{% extends 'layout.html' %} {% block content %}
+
+<div id="products-container" class="bg-white p-4">
+  <h2 class="text-center text-2xl font-bold mb-4">Travel Products On Sale</h2>
+
+  <!-- Show products -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+  >
+    {% for product in products_onsale %}
+    <a
+      href="{{ url_for('visitor.view_product', product_id=product[0]) }}"
+      class="card-link"
+    >
+      <div class="card" style="width: 17rem; height: 26rem">
+        <img
+          src="{{ url_for('static', filename='producting/' + product[6] if product[6] else 'default.png') }}"
+          class="card-img-top"
+          alt="Product Image"
+          style="
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+            height: 200px;
+          "
+        />
+        <div class="card-body">
+          <h5 class="card-title" style="font-size: 1.3em; overflow: hidden">
+            {{ product[1] }} {% if product[8] %}
+            <!-- Assuming the 9th element in the product tuple indicates whether it's on sale -->
+            <span class="badge bg-danger">On Sale</span>
+            {% endif %}
+          </h5>
+          <p class="card-text" style="font-size: 0.9em; overflow: hidden">
+            {{ product[4] }}
+          </p>
+          <p class="card-text">
+            {% set original_price = product[3] | float %}
+            {% set discount = product[7].replace('%', '') | float if product[7] and product[7] != 'None' else 0 %}
+            {% set discounted_price = original_price * (1 - discount / 100) %}
+            {% if discount > 0 %}
+              <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+            {% else %}
+            <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span> 
+            {% endif %}
+            <span style="font-size: 0.8em;">NZD</span>
+          </p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("price_range")
+    .addEventListener("change", function () {
+      var selectedValue = this.value
+      var currentUrl = window.location.href
+      var url = new URL(currentUrl)
+      url.searchParams.set("price_range", selectedValue)
+      window.location.href = url.toString()
+    })
+</script>
+
+{% endblock %}

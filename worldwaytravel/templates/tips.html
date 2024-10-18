@@ -1,0 +1,11 @@
+{% extends 'layout.html' %} {% block title %}  {% endblock %}
+{% block
+content %}
+
+ <img
+      src="{{ url_for('static', filename='assets/img/tips/tips' + tip_id + '.jpg') }}"
+      alt=""
+      class="h-full w-full object-cover object-center"
+    />
+  {% endblock %}
+

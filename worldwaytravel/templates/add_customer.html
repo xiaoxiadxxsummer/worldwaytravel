@@ -1,0 +1,177 @@
+{% extends "layout.html" %} {% block content %}
+
+<body>
+  <div class="function-container">
+    <div class="row justify-content-center">
+      <div class="col-6 text-start">
+        <h2 class="text-center">Add a New Customer</h2>
+        <br />
+
+        <form
+          action="{{ url_for('manager.add_customer')}}"
+          method="post"
+          enctype="multipart/form-data"
+          class="row g-3"
+        >
+          <div class="col-md-6">
+            <label for="username" class="form-label"><b>Username:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="password" class="form-label"><b>Password:</b></label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="title" class="form-label"><b>Title:</b></label>
+            <select id="title" class="form-select" name="title">
+              <option value="Mr">Mr</option>
+              <option value="Mrs">Mrs</option>
+              <option value="Miss">Miss</option>
+              <option value="Ms">Ms</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="firstname" class="form-label"><b>Firstname:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstname"
+              name="firstname"
+              pattern="[a-zA-Z]+"
+              title="Invalid Firstname!"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="lastname" class="form-label"><b>Lastname:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastname"
+              name="lastname"
+              pattern="[a-zA-Z]+"
+              title="Invalid Lastname!"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="phone" class="form-label"><b>Phone Number:</b></label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              name="phone"
+              value="0213456789"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="email" class="form-label"><b>Email:</b></label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              value="example@mail.nz"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="address" class="form-label"><b>Passport Info:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              name="address"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="birthdate" class="form-label"
+              ><b>Date of Birth:</b></label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="birthdate"
+              name="birthdate"
+              required
+            />
+          </div>
+{#          <div class="col-md-6">#}
+{#            <label for="points" class="form-label"#}
+{#              ><b>Points Balance:</b></label#}
+{#            >#}
+{#            <input#}
+{#              type="number"#}
+{#              class="form-control"#}
+{#              id="points"#}
+{#              name="points"#}
+{#            />#}
+{#          </div>#}
+{#          <div class="col-md-6">#}
+{#            <label for="credit" class="form-label"><b>Credit Limit:</b></label>#}
+{#            <input#}
+{#              type="number"#}
+{#              class="form-control"#}
+{#              id="credit"#}
+{#              name="credit"#}
+{#            />#}
+{#          </div>#}
+          <div class="col-md-6">
+            <label for="remain_credit" class="form-label"
+              ><b>Remaining Credit:</b></label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="remain_credit"
+              name="remain_credit"
+            />
+          </div>
+          <div class="col-12">
+            <div class="msg">{{ msg }}</div>
+          </div>
+          <div class="text-center col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="redirectToProfile()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  document.querySelector("form").addEventListener("submit", function (event) {
+    var phoneInput = document.getElementById("phone")
+    var phonePattern = /^(0[2-9]\d{2}-?\d{3}-?\d{3}|0[2-9]\d{8})$/
+
+    if (!phonePattern.test(phoneInput.value)) {
+      event.preventDefault()
+      document.querySelector(".msg").innerText =
+        "Invalid phone number format. Please enter a valid New Zealand phone number."
+    }
+  })
+
+  function redirectToProfile() {
+    window.location.href = "{{ url_for('manager.manage_customer') }}"
+  }
+</script>
+{% endblock %}

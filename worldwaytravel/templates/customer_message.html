@@ -1,0 +1,37 @@
+{% extends "layout.html" %} {% block content %}
+<body>
+  <div class="function-container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="text-center">
+          <h1>Massage Us</h1>
+          <br />
+        </div>
+        <form action="{{ url_for('customer.send_message') }}" method="post">
+          <div class="mb-3">
+            <div class="msg">{{ msg }}</div>
+            <label for="message"><b>Message:</b></label>
+            <textarea
+              class="form-control"
+              id="message"
+              name="message"
+            ></textarea>
+          </div>
+
+          <div style="height: 10px"></div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary" style="background-color: #000;border-color: #000;">Send</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="window.history.back();"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

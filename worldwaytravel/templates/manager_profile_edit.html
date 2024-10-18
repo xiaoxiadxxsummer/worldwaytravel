@@ -1,0 +1,95 @@
+<!-- manager_profile_edit.html -->
+{% extends 'layout.html' %} {% block title %}Manager Profile Edit{% endblock %} {% block
+    content %}
+<div class="container mt-5">
+    <h2 class="mb-4" style="text-align:center">Manager Profile</h2>
+    <div class="card">
+      <div class="card-body">
+        <form method="POST" class="row"  enctype="multipart/form-data">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    <select class="form-control" id="title" name="title">
+                        <option value="Mr" {% if manager_profile[3] == "Mr" %}selected{% endif %}>Mr</option>
+                        <option value="Ms" {% if manager_profile[3] == "Ms" %}selected{% endif %}>Ms</option>
+                        <option value="Miss" {% if manager_profile[3] == "Miss" %}selected{% endif %}>Miss</option>
+
+                    </select>
+                    
+                </div>
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">First Name:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ manager_profile[1] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ manager_profile[2] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="email">Email Address:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ manager_profile[5] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="phone_number" class="form-label">Phone Number:</label>
+                    <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ manager_profile[6] }}">
+                    <small id="phoneHelp" class="form-text text-muted">Please enter phone number in New Zealand format (e.g., 021-123-4567 or 0211234567 )</small>
+                        <div class="invalid-feedback">
+                            Phone number must be in New Zealand format (e.g., 021-123-4567 or 0211234567)
+                        </div>
+                </div>
+                
+                
+            </div>
+            <div class="col-md-6 text-center">
+                <label for="image_url" class="form-label" >Profile Image</label>
+                <input type="file" class="form-control" id="image_url" name="image_url">
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const phoneInput = document.getElementById('phone_number')
+        const form = document.querySelector('form');
+
+        phoneInput.addEventListener('input', function(){
+            validatePhoneNumber();
+        });
+
+
+        form.addEventListener('submit', function(event){
+            if(!validatePhoneNumber(true)){
+                event.preventDefault();
+                alert('Please correct the phone number to NZ format!');
+            }
+        });
+
+        function validatePhoneNumber(showAlert = false){
+            var nzPhonePattern = /^(\+64|0)([2-9]\d{1}|[27]\d{2})[-\s]?\d{3}[-\s]?\d{4}$/;
+            var isValid = nzPhonePattern.test(phoneInput.value);
+            if(!isValid){
+                phoneInput.classList.add('is-invalid');
+                document.getElementById('phoneHelp').textContent = 'Please enter phone number in New Zealand format';
+                document.getElementById('phoneHelp').classList.add('text-danger');
+                document.getElementById('phoneHelp').classList.remove('text-muted');
+                if (showAlert){
+                    alert('Invalid phone number format.')
+                }
+            } else {
+                phoneInput.classList.remove('is-invalid');
+                document.getElementById('phoneHelp').textContent = 'Please enter phone number in New Zealand format';
+                document.getElementById('phoneHelp').classList.remove('text-danger');
+                document.getElementById('phoneHelp').classList.add('text-muted');
+            }
+            return isValid;
+        }
+    });
+</script>
+
+
+{% endblock %}

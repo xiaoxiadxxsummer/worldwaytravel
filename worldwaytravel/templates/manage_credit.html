@@ -1,0 +1,146 @@
+{% extends 'layout.html' %} {% block title %}Manage Credit Limit{% endblock %} {%
+  block content %} 
+<h2 class="text-center">Credit Limit Management</h2>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Filter -->
+<div class="text-center mb-3">
+  <label for="filterStatus" class="form-label">Filter Messages by Status:</label>
+  <select class="form-select" id="filterStatus" onchange="filterByStatus(this)">
+    <option value="all" {% if filter_status == 'all' %}selected{% endif %}>All Messages</option>
+    <option value="replied" {% if filter_status == 'replied' %}selected{% endif %}>Replied</option>
+    <option value="waiting" {% if filter_status == 'waiting' %}selected{% endif %}>Waiting for Reply</option>
+  </select>
+</div>
+
+<!-- Table to display messages -->
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Sender ID</th>
+      <th>Sender Name</th>
+      <th>Message Content</th>
+      <th>Message Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="messageTableBody">
+    {% for credit in creditlist %}
+    <tr>
+      <td>{{ credit[1] }}</td>
+      <td><a href="{{ url_for('manager.view_customer', id=credit[7]) }}">{{ credit[8] }} {{ credit[9] }}</a></td>
+      <td>{{ credit[4] }}</td>
+      <td>{{ credit[5] }}</td>
+      <td>
+        {% if credit[6] == 'replied' %}
+          <button class="btn btn-primary" disabled>Replied</button>
+        {% else %}
+          <button class="btn btn-primary" onclick="openReplyModal('{{ credit[0] }}')">Reply</button>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Reply Modal -->
+<div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="replyModalLabel">Reply to Credit Request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <form action="{{ url_for('manager.process_reply') }}" method="post" id="replyForm">
+        <div class="modal-body">
+        <input type="hidden" name="credit_id" id="creditIdInput">
+        <div class="mb-3">
+          <label for="replyStatus" class="form-label">Reply Status:</label>
+          <select class="form-select" id="replyStatus" name="reply_status" onchange="toggleCreditLimitInput(this)" required>
+            <option value="">Select</option>
+            <option value="approve">Approve</option>
+            <option value="decline">Decline</option>
+          </select>
+        </div>
+        <div class="mb-3" id="creditLimitInput" style="display: none;">
+          <label for="creditLimit" class="form-label">Credit Limit:</label>
+          <input type="number" class="form-control" id="creditLimit" name="credit_limit" placeholder="Enter credit limit">
+        </div>
+        <div class="mb-3" id="declineReasonInput" style="display: none;">
+          <label for="declineReason" class="form-label">Decline Reason:</label>
+          <textarea class="form-control" id="declineReason" name="decline_reason" placeholder="Enter reason for decline"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  function filterByStatus(selectElement) {
+    var filter = selectElement.value;
+    window.location.href = "{{ url_for('manager.manage_credit') }}" + "?filter=" + filter;
+  }
+  
+  function openReplyModal(creditId) {
+    document.getElementById('creditIdInput').value = creditId;
+    var modal = new bootstrap.Modal(document.getElementById('replyModal'));
+    modal.show();
+  }
+
+  function toggleCreditLimitInput(selectElement) {
+    var creditLimitInput = document.getElementById('creditLimitInput');
+    var declineReasonInput = document.getElementById('declineReasonInput');
+    var creditLimit = document.getElementById('creditLimit');
+    var declineReason = document.getElementById('declineReason');
+
+    if (selectElement.value === "approve") {
+      creditLimitInput.style.display = "block";
+      creditLimit.setAttribute('required', 'required');
+      declineReasonInput.style.display = "none";
+      declineReason.removeAttribute('required');
+    } else if (selectElement.value === "decline") {
+      creditLimitInput.style.display = "none";
+      creditLimit.removeAttribute('required');
+      declineReasonInput.style.display = "block";
+      declineReason.setAttribute('required', 'required');
+    } else {
+      creditLimitInput.style.display = "none";
+      creditLimit.removeAttribute('required');
+      declineReasonInput.style.display = "none";
+      declineReason.removeAttribute('required');
+    }
+  }
+
+  document.getElementById('replyForm').addEventListener('submit', function(event) {
+    var replyStatus = document.getElementById('replyStatus').value;
+    if (replyStatus === '') {
+      alert('Please select a reply status.');
+      event.preventDefault();
+      return;
+    }
+
+    if (replyStatus === 'approve' && document.getElementById('creditLimit').value === '') {
+      alert('Please enter a credit limit.');
+      event.preventDefault();
+      return;
+    }
+
+    if (replyStatus === 'decline' && document.getElementById('declineReason').value === '') {
+      alert('Please enter a reason for decline.');
+      event.preventDefault();
+      return;
+    }
+  });
+</script>
+{% endblock %}

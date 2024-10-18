@@ -1,0 +1,155 @@
+<!-- staff_inventory.html -->
+{% extends 'layout.html' %} {% block title %}Products{% endblock %} {% block
+    content %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Seating Number</title>
+</head>
+{% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="flash-messages">
+    {% for message in messages %}
+    <li><strong>{{ message }}</strong></li>
+    {% endfor %}
+    </div>
+{% endif %} {% endwith %}
+    <body class="centered-content">
+        <h1 style="text-align: center;">Seating Numbers</h1>
+    
+    <!--Manage Seating Numbers-->
+
+    <div>
+        
+        <form id="searchForm" method="GET" action="{{ url_for('staff.staff_inventory') }}" class="d-flex align-items-center">
+            <input type="text" name="search" placeholder="Enter product ID or name" class="form-control" >
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </form>
+        <hr>
+        <!--Put new in stock-->
+        <p style="margin: 0; flex-grow: 0;"><strong>New In: </strong></p>
+        <button
+            id="openStockModal"
+            class="btn btn-success"
+            style="margin-bottom: 20px"
+            data-toggle="modal"
+            data-target="#stockModal"
+        >
+            Add More Seats
+        </button>
+        <div class="modal fade" id="stockModal" tabindex="-1" aria-labelledby="stockModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal title" id="stockModalLabel">Add Seats</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addStockForm" action="{{ url_for('staff.add_stock') }}" method="post">
+                            <div class="form-group">
+                                <label for="productSelect">Product</label>
+                                <select class="form-control" id="productSelect" name="product_id">
+                                    {% for product in products %}
+                                    <option value="{{ product[0] }}">{{ product[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form group">
+                                <label for="additionalStock">Add</label>
+                                <input type="number" class="form-control" id="additionalStock" name="additional_stock" min="0" required>
+
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                    <th>Progressing</th>
+                    <th>Seats</th>
+                    <th>Status</th>
+                    <th>Total Seating</th>
+                    <th>New Seats</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for product in products %}
+                <tr>
+                    <td>{{ product[0] }}</td>
+                    <td>{{ product[1] }}</td>
+                    <td>{{ product[4] }}</td>
+                    <td>{{ product[2] }}
+                        {% if product[2] <= 10 %}
+                            <span class="badge bg-warning">Low</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ product[3] }}</td>
+                    <td>{{ product[5] }}</td>
+                    <td>
+                        <form action="{{ url_for('staff.update_stock') }}" method="post">
+                            <input type="hidden" name="product_id" value="{{ product[0] }}">
+                            <input type="number" name="stock_level" min="0" placeholder="Enter new seating number" required>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        $(document).on('submit', 'form', function(e){
+            if (this.id === 'searchForm') {
+                return;
+            }
+            if (!this.hasAttribute('data-confirmed')) {
+
+            
+                e.preventDefault();
+                var form = $(this);
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will update the seating level!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, update it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form[0].setAttribute('data-confirmed', 'true');
+                        form[0].submit();
+                    }
+            });
+        }
+        });
+
+        $(document).ready(function() {
+            $('#productSelect').select2({
+                placeholder:'Select a product',
+                allowClear: true
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const rows = document.querySelectorAll('table tr');
+            rows.forEach(rpw => {
+                const stock = parseInt(row.cells[3].textContent);
+                if(stock < 10) {
+                    row.style.color = 'red';
+                }
+            });
+        });
+    </script>
+    </body>
+    {% endblock %}

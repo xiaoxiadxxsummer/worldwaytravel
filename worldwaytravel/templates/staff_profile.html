@@ -1,0 +1,146 @@
+<!-- staff_profile.html -->
+{% extends 'layout.html' %} {% block title %}Staff Profile{% endblock %} {%
+block content %}
+
+<h2 style="text-align: center">My Profile</h2>
+
+{% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="flash-messages">
+    {% for message in messages %}
+    <li><strong>{{ message }}</strong></li>
+    {% endfor %}
+  </div>
+{% endif %} {% endwith %}
+
+<div>
+  <h3>Your profile details:</h3>
+  <div class="row" style="text-align: -webkit-center;">
+    <div class="col-md-6">
+      <table class="table">
+        <tr>
+          <td>Username:</td>
+          <td>{{ staff_info[1] }}</td>
+        </tr>
+        <tr>
+          <td>Title:</td>
+          <td>{{ staff_profile[3] }}</td>
+        </tr>
+        <tr>
+          <td>First Name:</td>
+          <td>{{ staff_profile[1] }}</td>
+        </tr>
+        <tr>
+          <td>Last Name:</td>
+          <td>{{ staff_profile[2] }}</td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>{{ staff_profile[5] }}</td>
+        </tr>
+        <tr>
+          <td>Phone Number:</td>
+          <td>{{ staff_profile[6] }}</td>
+        </tr>
+        <tr>
+          <td>Status:</td>
+          <td>
+            {{ "Active" if staff_profile[8] == 'Active' else "Inactive" }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 text-center">
+      {% if staff_profile[7] %}{% if staff_profile[7].startswith('uploads/') %}
+
+      <img
+        src="{{ url_for('static', filename=staff_profile[7]) }}"
+        alt="Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/' + staff_profile[7]) }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %}{% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/profile.jpg') }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %}
+    </div>
+
+    <div class="row justify-content-center" style="margin-bottom: 10px">
+      <div class="col-auto">
+        <a
+          href="{{ url_for('staff.staff_profile_edit')}}"
+          class="btn btn-primary"
+           style="background-color: #000;border-color: #000;"
+          >Edit My Profile</a
+        >
+      </div>
+      <div class="col-auto">
+        <a
+          href="javascript:void(0)"
+          id="changePasswordLink"
+          class="btn btn-primary"
+           style="background-color: #000;border-color: #000;"
+          >Change My Password</a
+        >
+      </div>
+    </div>
+    <div class="col-md-12">
+      <form
+        action="{{ url_for('staff.change_password')}}"
+        method="POST"
+        id="changePasswordForm"
+        style="display: none"
+      >
+        <div class="form-group">
+          <label for="newPassword">New Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="newPassword"
+            name="newPassword"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+          />
+        </div>
+        <button type="submit" style="background-color: #000;border-color: #000;" class="btn btn-primary">Change Password</button>
+        <button type="button" class="btn btn-danger" id="cancelChangePassword">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("changePasswordLink").onclick = function () {
+    var form = document.getElementById("changePasswordForm")
+    form.style.display = form.style.display === "none" ? "block" : "none"
+  }
+  document.getElementById("cancelChangePassword").onclick = function () {
+    var form = document.getElementById("changePasswordForm")
+    form.style.display = "none"
+    document.getElementById("newPassword").value = ""
+    document.getElementById("confirmPassword").value = ""
+  }
+</script>
+
+{% endblock %}

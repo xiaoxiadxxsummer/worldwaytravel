@@ -1,0 +1,146 @@
+<!-- manager_profile.html -->
+{% extends 'layout.html' %} {% block title %}Manager Profile{% endblock %} {%
+block content %}
+
+<h2 style="text-align: center">My Profile</h2>
+
+{% with messages = get_flashed_messages() %} {% if messages %}
+<div class="alert alert-info" role="alert">
+  {% for message in messages %}
+  <li><strong>{{ message }}</strong></li>
+  {% endfor %}
+</div>
+{% endif %} {% endwith %}
+
+<div>
+  <h3>Your profile details:</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table">
+        <tr>
+          <td>Username:</td>
+          <td>{{ manager_info[1] }}</td>
+        </tr>
+        <tr>
+          <td>Title:</td>
+          <td>{{ manager_profile[3] }}</td>
+        </tr>
+        <tr>
+          <td>First Name:</td>
+          <td>{{ manager_profile[1] }}</td>
+        </tr>
+        <tr>
+          <td>Last Name:</td>
+          <td>{{ manager_profile[2] }}</td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>{{ manager_profile[5] }}</td>
+        </tr>
+        <tr>
+          <td>Phone Number:</td>
+          <td>{{ manager_profile[6] }}</td>
+        </tr>
+        <tr>
+          <td>Status:</td>
+          <td>
+            {{ "Active" if manager_profile[8] == 'Active' else "Inactive" }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 text-center">
+      {% if manager_profile[7] %} {% if
+      manager_profile[7].startswith('uploads/') %}
+
+      <img
+        src="{{ url_for('static', filename=manager_profile[7]) }}"
+        alt="Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/' + manager_profile[7]) }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %} {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/profile.jpg') }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %}
+    </div>
+
+    <div class="row justify-content-center" style="margin-bottom: 10px">
+      <div class="col-auto">
+        <a
+          href="{{ url_for('manager.manager_profile_edit')}}"
+          class="btn btn-primary"
+          >Edit My Profile</a
+        >
+      </div>
+      <div class="col-auto">
+        <a
+          href="javascript:void(0)"
+          id="changePasswordLink"
+          class="btn btn-primary"
+          >Change My Password</a
+        >
+      </div>
+    </div>
+    <div class="col-md-12">
+      <form
+        action="{{ url_for('manager.change_password')}}"
+        method="POST"
+        id="changePasswordForm"
+        style="display: none"
+      >
+        <div class="form-group">
+          <label for="newPassword">New Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="newPassword"
+            name="newPassword"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Change Password</button>
+        <button type="button" class="btn btn-danger" id="cancelChangePassword">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("changePasswordLink").onclick = function () {
+    var form = document.getElementById("changePasswordForm")
+    form.style.display = form.style.display === "none" ? "block" : "none"
+  }
+
+  document.getElementById("cancelChangePassword").onclick = function () {
+    var form = document.getElementById("changePasswordForm")
+    form.style.display = "none"
+    document.getElementById("newPassword").value = ""
+    document.getElementById("confirmPassword").value = ""
+  }
+</script>
+
+{% endblock %}

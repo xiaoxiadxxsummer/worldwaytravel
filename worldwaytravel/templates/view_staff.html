@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    
+    <h2 class = "text-center">{{ account[1] }} Profile Details</h2>
+    <div class="function-container">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table">
+                    <tr>
+                        <td>Username:</td>
+                        <td>{{ account[1] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Title:</td>
+                        <td>{{ staff_info[3] }}</td>
+                    </tr>
+                    <tr>
+                        <td>First Name:</td>
+                        <td>{{ staff_info[1] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Family Name:</td>
+                        <td>{{ staff_info[2] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Phone Number:</td>
+                        <td>{{ staff_info[6] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email Address:</td>
+                        <td>{{ staff_info[5] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Date of Join:</td>
+                        <td>{% if staff_info[4] %}{{ staff_info[4].strftime('%d-%m-%Y') }}{% else %}None{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Status:</td>
+                        <td>{{ "Active" if staff_info[8] == 'Active' else "Inactive" }}</td>
+                    </tr>
+                </table>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + (staff_info[7] if staff_info[7] is not none else 'profile.jpg')) }}"
+                        alt="Profile Image"
+                        class="img-fluid"
+                        style="max-width: 200px; border-radius:10px;"
+                    />
+                </div>
+            </div>
+
+        <a href="{{ url_for('manager.update_staff',id = account[0] )}}" class="btn btn-primary">Update</a>   
+        <button type="button" class="btn btn-success" onclick="toggleChangePasswordForm(true)">
+            Change Password
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="redirectToProfile()">
+            Cancel
+        </button>
+        <div style="height: 10px;"></div>
+        <!-- hidden password changing -->
+        <div id="changePasswordForm" style="display:none;">
+            <form action="{{ url_for('manager.change_staff_password', id=account[0]) }}" method="POST">
+                <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm New Password" required>
+                <div style="height: 10px;"></div>
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="button" class="btn btn-secondary" onclick="toggleChangePasswordForm(false)">Cancel</button>
+            </form>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+<script>
+    function redirectToProfile() {
+    window.location.href = "{{ url_for('manager.manage_staff') }}"
+    }
+    //change password
+    function toggleChangePasswordForm(showForm) {
+        var form = document.getElementById('changePasswordForm');
+        var changePasswordRow = document.getElementById('changePasswordRow');
+        
+        if (showForm) {
+            form.style.display = 'table-row';
+            changePasswordRow.style.display = 'none';
+        } else {
+            form.style.display = 'none';
+            changePasswordRow.style.display = 'table-row';
+        }
+    }
+</script>
+{% endblock %}

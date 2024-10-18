@@ -1,0 +1,95 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container mt-5">
+  <h2 class="text-center">Order Details</h2>
+
+  <div class="order-items mt-4">
+    <h5>Ordered Items:</h5>
+    <ul class="list-group">
+      {% for item in order_details %}
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        <div class="d-flex align-items-center">
+          <img
+            src="{{ url_for('static', filename='producting/' + item[4]) }}"
+            alt="Product Image"
+            class="product-image"
+          />
+          <span class="ms-3">{{ item[1] }}</span>
+        </div>
+        <span class="badge bg-primary rounded-pill me-3">{{ item[2] }}</span>
+        <p class="ml-4">${{ item[3] }} each</p>
+        <p class="ml-4">Total: ${{ item[5] }}</p>
+      </li>
+      {% endfor %} {% for order in order_info %}
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        <div class="order-info mt-4">
+          <h5>Order ID: {{ order[0] }}</h5>
+          <p>Order Date: {{ order[1].strftime('%d/%m/%Y') }}</p>
+          <p>Total Cost (includes 15% GST): $ {{ order[2] }}</p>
+          <p>Status: {{ order[3] }}</p>
+{#          <p>Shipping Method: {{ order[4] }}</p>#}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <br>
+  <h5>Order Status:</h5>
+  <br>
+  <div class="order-status-bar">
+    {% for order in order_info %}
+{#      {% if order[4] == "pick_up" %}#}
+{#        {% set status_list = ['Pending', 'Progressing', 'Delivered', 'Completed'] %}#}
+{#      {% else %}#}
+{#        {% set status_list = ['Pending', 'Progressing', 'Shipped', 'Delivered', 'Completed'] %}#}
+{##}
+{#      {% endif %}#}
+
+{#        {% set status_list = ['Pending', 'Progressing', 'Confirmed', 'Shipped', 'Delivered', 'Completed'] %}#}
+        {% set status_list = ['Pending', 'Progressing', 'Confirmed', 'Completed'] %}
+
+
+      {% if order_status == 'Cancelled' %}
+        <div class="status-segment cancelled">
+          <i class="fa fa-times-circle" aria-hidden="true"></i>
+          <div class="status-label">Cancelled</div>
+          <div class="date-label">
+            <div style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid black;"></div>
+            {{ status_dates['Cancelled'].strftime('%d-%m-%Y') if 'Cancelled' in status_dates else 'N/A' }}
+          </div>
+        </div>
+      {% else %}
+    
+        {% set current_status_index = status_list.index(order_status) %}
+
+        {% for status in status_list %}
+          <div class="status-segment {{ 'done' if status_list.index(status) <= current_status_index }} {{ 'blinking-effect' if status == order_status }}">
+            <i class="fa {{ 'fa-hourglass-start' if status == 'Pending' else
+                            'fa-sync-alt' if status == 'Progressing' else
+                            'fa-truck' if status == 'Shipped' else
+                            'fa-box-open' if status == 'Delivered' or (order[4] == 'pick_up' and status == 'Delivered') else
+                            'fa-thumbs-up' if status == 'Confirmed' else
+                            'fa-check-circle' if status == 'Completed' }}" aria-hidden="true"></i>
+{#            <div class="status-label">{{ 'Ready for Pickup' if order[4] == 'pick_up' and status == 'Delivered' else status }}</div>#}
+            <div class="status-label">{{ status }}</div>
+            <div class="date-label">
+              <div style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid black;"></div>
+              {% if status_list.index(status) <= current_status_index %}
+                {{ status_dates[status].strftime('%d-%m-%Y') }}
+              {% else %}
+                Est. {{ status_dates[status].strftime('%d-%m-%Y') }}
+              {% endif %}
+              </div>
+          </div>
+      {% endfor %}
+    {% endif %}
+    {% endfor %}
+    
+
+</div>
+
+{% endblock %}

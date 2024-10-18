@@ -1,0 +1,60 @@
+{% extends 'layout.html' %} {% block title %}Manage Messages{% endblock %} {%
+block content %}
+
+<h2 class="text-center">Messages Management</h2>
+
+<div class="text-center mb-3">
+  <label for="filterTypeSelect" class="form-label">Filter Messages:</label>
+  <select class="form-select" id="filterTypeSelect" onchange="applyFilter()">
+    <option value="">All Messages</option>
+    <option value="user_id_26">Message for Manager</option>
+    <option value="apply_credit">Credit Apply</option>
+    <option value="standard">Standard Messages</option>
+  </select>
+</div>
+
+<!-- Table to display messages -->
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Sender ID</th>
+        <th>Recipient ID</th>
+        <th>Message Type</th>
+        <th>Message Content</th>
+        <th>Message Date</th>
+      </tr>
+    </thead>
+    <tbody id="messageTableBody">
+      {% for message in messagelist %}
+      <tr>
+        <td>{{ message[1] }}</td>
+        <td>{{ message[2] }}</td>
+        <td>{{ message[3] }}</td>
+        <td>{{ message[4] }}</td>
+        <td>{{ message[5] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function applyFilter() {
+    var selectElement = document.getElementById("filterTypeSelect");
+    var selectedValue = selectElement.value;
+    var url = "/manager/managemessage";
+
+    if (selectedValue === "user_id_26") {
+      url += "?recipient_id=26";
+    } else if (selectedValue === "apply_credit") {
+      url += "?type=apply_credit";
+    } else if (selectedValue === "standard") {
+      url += "?type=standard";
+    }
+
+    window.location.href = url;
+  }
+</script>
+
+{% endblock %}

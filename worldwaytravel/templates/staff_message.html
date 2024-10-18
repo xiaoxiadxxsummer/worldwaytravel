@@ -1,0 +1,70 @@
+<!-- staff_message.html -->
+{% extends 'layout.html' %} {% block title %}Messages{% endblock %} {%
+    block content %} 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages</title>
+</head>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+            <li><strong>{{ message }}</strong></li>
+            {% endfor %}
+        </div>
+    {% endif %} {% endwith %}
+<body>
+    <h1 style="text-align: center;">Messages from Customers</h1>
+    <div class="message-container">
+        <div class="message-list">
+            {% for message in cus_messages %}
+                <div class="message">
+                    <p><strong>From:</strong>{{ message[0] }} {{ message[1] }} id:{{ message[2] }} <strong>Date:</strong><span class="message-date">{{ message[4] }}</span></p>
+                    <p><strong>Content:</strong>{{ message[3] }}</p>
+                    {% if message[7] %}
+                        <p><strong>Reply Date:</strong><span class="reply-date">{{ message[9] }}</span></p>
+                        <p><strong>Reply Content:</strong>{{ message[8] }}</p>
+                        <p class="status-replied"><strong>Status:</strong> Replied</p>
+                    
+{#                    {% elif user_id in [17, 26, 27] %}#}
+                    {% else %}
+                    <span class="status-changed" id="bell-icon">
+                        <i class="fas fa-comment-dots"></i></span>
+                        <form action="{{ url_for('staff.view_messages') }}" method="post" class="reply-form">
+                            <input type="hidden" name="sender_id" value="{{ message[2] }}">
+                            <textarea name="reply" required placeholder="Type your reply here..."></textarea>
+                            <button type="submit">Reply</button>
+                        </form>
+{#                    {% else %}#}
+{#                        <p class="no-permission-reply"><strong>You do not have permission to reply.</strong> </p>#}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function formatNZDateTime(dateTimeString) {
+                let date = new Date(dateTimeString);
+                return date.toLocaleString("en-NZ", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                    timeZone: "Pacific/Auckland"
+                });
+            }
+
+            document.querySelectorAll(".message-date, .reply-date").forEach(function(element) {
+                element.textContent = formatNZDateTime(element.textContent);
+            });
+        });
+    </script>
+</body>
+
+
+{% endblock %}

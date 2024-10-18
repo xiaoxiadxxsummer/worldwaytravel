@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block content %}
+<body>
+    <div class="function-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="text-center">
+                    <h2 class="text-center">Edit Profile</h2><br>
+                </div>
+                <form action="{{ url_for('manager.update_staff', id=account[0]) }}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="username" class="form-label"><b>Username:</b></label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ account[1] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label"><b>Title:</b></label>
+                        <select id="title" name="title" class="form-select">
+                            <option value="Mr" {% if staff_info[3] == 'Mr' %} selected {% endif %}>Mr</option>
+                            <option value="Mrs" {% if staff_info[3] == 'Mrs' %} selected {% endif %}>Mrs</option>
+                            <option value="Miss" {% if staff_info[3] == 'Miss' %} selected {% endif %}>Miss</option>
+                            <option value="Ms" {% if staff_info[3] == 'Ms' %} selected {% endif %}>Ms</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="firstname" class="form-label"><b>Firstname:</b></label>
+                        <input type="text" class="form-control" id="firstname" name="firstname" value="{{ staff_info[1] }}" pattern="[a-zA-Z]+" title="Invalid Firstname!" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="form-label"><b>Lastname:</b></label>
+                        <input type="text" class="form-control" id="lastname" name="lastname" value="{{ staff_info[2] }}" pattern="[a-zA-Z]+" title="Invalid Lastname!" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label"><b>Phone Number:</b></label>
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ staff_info[6] }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label"><b>Email:</b></label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ staff_info[5] }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="joindate" class="form-label"><b>Date of Join:</b></label>
+                        <input type="date" class="form-control" id="joindate" name="joindate" value="{{ staff_info[4] }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profile_image" class="form-label"><b>Profile Image:</b></label>
+                        <input type="file" class="form-control" id="profile_image" name="profile_image" multiple>
+                    </div>
+                    <div class="msg">{{ msg }}</div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" onclick="redirectToProfile()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function redirectToProfile() {
+    window.location.href = "{{ url_for('manager.manage_staff') }}"
+    }
+    document.querySelector("form").addEventListener("submit", function (event) {
+        var phoneInput = document.getElementById("phone");
+        var phonePattern = /^(0[2-9]\d{2}-?\d{3}-?\d{3}|0[2-9]\d{8})$/;
+
+        if (!phonePattern.test(phoneInput.value)) {
+            event.preventDefault();
+            document.querySelector(".msg").innerText =
+                "Invalid phone number format. Please enter a valid New Zealand phone number.";
+        }
+    });
+</script>
+{% endblock %}

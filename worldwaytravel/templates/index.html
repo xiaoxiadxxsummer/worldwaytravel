@@ -1,0 +1,719 @@
+{% extends 'layout.html' %} {% block title %}Worldway Travel{% endblock %} {% block
+content %}
+
+<div class="relative overflow-hidden bg-white">
+  <div class="pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">
+    <div class="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8" style="text-align: -webkit-center">
+
+        <video loop muted autoplay playsinline poster="{{ url_for('static', filename='assets/img/hero/video_background.jpg') }}" class="background-video">
+            <source src="{{ url_for('static', filename='assets/img/hero/hero.mp4') }}" type="video/mp4">
+
+        </video>
+
+        <div class="background-video-content">
+
+            <div class="sm:max-w-lg">
+            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-9xl">
+              Worldway
+            </h1>
+
+            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-9xl">
+              Travel
+            </h1>
+            <p><br/><br/></p>
+            <div style="margin-left: 1em;">
+
+                <a
+              href="{{ url_for('visitor.all_products') }}"
+              class="inline-block rounded-md border border-transparent bg-black px-8 py-3 text-center font-medium text-white hover:bg-black"
+              >Shop Now</a
+            >
+
+            {% if not session['loggedin'] %}
+            <a
+              href="{{ url_for('login.login_page') }}"
+              class="inline-block rounded-md border border-transparent bg-black px-8 py-3 text-center font-medium text-white hover:bg-black"
+            style="margin-left: 5em;"
+            >Login/Register</a
+            >
+            {% endif %}
+
+          </div>
+          </div>
+
+
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+{#<div class="relative overflow-hidden bg-white">#}
+{#  <div class="pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">#}
+{#    <div class="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8" style="text-align: -webkit-center">#}
+<div style="padding: 0;">
+
+        <div>
+            <img src="{{ url_for('static', filename='assets/img/hero/hero2.jpg') }}"/>
+        </div>
+
+</div>
+
+
+
+
+
+<!-- Category Section  -->
+
+<div class="bg-white" style="">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+    <h1 style="font-size: 3em;">Shop By Categories</h1>
+      <p style="padding:30px 0;">Browse our curated travel packages by category and find your next dream adventure with ease!</p>
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8  "
+    >
+
+      <a href="{{ url_for('visitor.all_products', category_id=1) }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/categoryimg/china-tour.jpg') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+
+      </a>
+
+      <a href="{{ url_for('visitor.all_products', category_id=2) }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/categoryimg/new-zealand-tour.jpg') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+
+      </a>
+      <a href="{{ url_for('visitor.all_products', category_id=3) }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/categoryimg/weekend-club.jpg') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+
+      </a>
+      <a href="{{ url_for('visitor.all_products', category_id=4) }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/categoryimg/overseas-tour.jpg') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+
+      </a>
+{#      <a href="{{ url_for('products_category', category_id=5) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Animal-Equipment.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=6) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Water-and-Fencing.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=7) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Clothing-and-Footwear.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=8) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Household-and-Garden-Supplies.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=9) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Agrichemicals.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=10) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Machinery-and-Oil.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=11) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Pasture-and-Cropping.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=12) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Fertilizer.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+{#      <a href="{{ url_for('products_category', category_id=13) }}" class="group">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/categoryimg/Clearance-Section.jpg') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{##}
+{#      </a>#}
+
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- Advertising Section One -->
+
+<div class="bg-white" style="margin-top:-50px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8"
+  >
+    <div
+      class="grid grid-cols-1 "
+    >
+
+{#      <a href="{{ url_for('products_onsale') }}" class="group grid grid-cols-subgrid col-span-5">#}
+      <a href="#" class="group grid grid-cols-subgrid col-span-5">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/hero/banner1.gif') }}"
+            alt="Promotional Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+
+        </div>
+
+      </a>
+{#        <a class=" grid grid-cols-subgrid col-span-1"></a>#}
+{#        <a href="{{ url_for('products_onsale') }}"#}
+{#           class="group  grid grid-cols-subgrid col-span-5">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/product/f2.png') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{#      </a>#}
+
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Products Section  -->
+
+    <!-- China Productions -->
+<div class="bg-white" style="margin-top: -180px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+    <h1 style="font-size: 3em;">CHINA</h1>
+    <p style="padding: 30px 0;">Discover the rich culture and diverse cuisines across China. Enjoy a comfortable and seamless journey</p>
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8"
+    >
+      {% for product in china_products %}
+      <a href="/product/{{ product[0] }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='producting/' + product[6]) }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+        <h3 class="mt-4 text-sm text-gray-700">{{ product[1] }}</h3>
+        <p class="mt-1 text-lg font-medium text-gray-900">
+          {% set original_price = product[3] | float %}
+          {% set discount = product[7].replace('%', '') | float if product[7] and product[7] != 'None' else 0 %}
+          {% set discounted_price = original_price * (1 - discount / 100) %}
+          {% if discount > 0 %}
+            <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+          {% else %}
+          <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span> 
+          {% endif %}
+          <span style="font-size: 0.8em;">NZD</span>
+        </p>
+
+      </a>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-8">
+      <a
+        href="{{ url_for('visitor.all_products',category_id=1) }}"
+{#        href="#"#}
+        class="inline-block px-6 py-3 rounded-lg bg-black text-white font-semibold shadow-md hover:bg-black transition-colors duration-300"
+        >View More</a
+      >
+    </div>
+  </div>
+</div>
+
+
+<!-- Advertising Section One -->
+
+<div class="bg-white" style="margin-top:-50px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8"
+  >
+    <div
+      class="grid grid-cols-1 "
+    >
+
+{#      <a href="{{ url_for('products_onsale') }}" class="group grid grid-cols-subgrid col-span-5">#}
+      <a href="#" class="group grid grid-cols-subgrid col-span-5">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/hero/banner2.gif') }}"
+            alt="Promotional Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+
+        </div>
+
+      </a>
+{#        <a class=" grid grid-cols-subgrid col-span-1"></a>#}
+{#        <a href="{{ url_for('products_onsale') }}"#}
+{#           class="group  grid grid-cols-subgrid col-span-5">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/product/f2.png') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{#      </a>#}
+
+
+    </div>
+
+  </div>
+</div>
+
+    <!-- New Zealand products -->
+<div class="bg-white" style="margin-top: -180px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+    <h1 style="font-size: 3em;">NEW ZEALAND</h1>
+    <p style="padding: 30px 0;">Relax amidst New Zealand’s stunning nature, combining adventure and tranquility in perfect harmony.</p>
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8"
+    >
+      {% for product in nz_products %}
+      <a href="/product/{{ product[0] }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='producting/' + product[6]) }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+        <h3 class="mt-4 text-sm text-gray-700">{{ product[1] }}</h3>
+        <p class="mt-1 text-lg font-medium text-gray-900">
+          {% set original_price = product[3] | float %}
+          {% set discount = product[7].replace('%', '') | float if product[7] and product[7] != 'None' else 0 %}
+          {% set discounted_price = original_price * (1 - discount / 100) %}
+          {% if discount > 0 %}
+            <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+          {% else %}
+          <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span>
+          {% endif %}
+          <span style="font-size: 0.8em;">NZD</span>
+        </p>
+
+      </a>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-8">
+      <a
+        href="{{ url_for('visitor.all_products',category_id=2) }}"
+{#        href="#"#}
+        class="inline-block px-6 py-3 rounded-lg bg-black text-white font-semibold shadow-md hover:bg-black transition-colors duration-300"
+        >View More</a
+      >
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Advertising Section One -->
+
+<div class="bg-white" style="margin-top:-50px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8"
+  >
+    <div
+      class="grid grid-cols-1 "
+    >
+
+{#      <a href="{{ url_for('products_onsale') }}" class="group grid grid-cols-subgrid col-span-5">#}
+      <a href="#" class="group grid grid-cols-subgrid col-span-5">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/hero/banner3.gif') }}"
+            alt="Promotional Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+
+        </div>
+
+      </a>
+{#        <a class=" grid grid-cols-subgrid col-span-1"></a>#}
+{#        <a href="{{ url_for('products_onsale') }}"#}
+{#           class="group  grid grid-cols-subgrid col-span-5">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/product/f2.png') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{#      </a>#}
+
+
+    </div>
+
+  </div>
+</div>
+
+    <!-- Weekend products -->
+<div class="bg-white" style="margin-top: -180px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+    <h1 style="font-size: 3em;">WEEKEND CLUBS</h1>
+    <p style="padding: 30px 0;">Unwind with weekend getaways and discover hidden natural gems away from the city buzz.</p>
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8"
+    >
+      {% for product in weekend_products %}
+      <a href="/product/{{ product[0] }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='producting/' + product[6]) }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+        <h3 class="mt-4 text-sm text-gray-700">{{ product[1] }}</h3>
+        <p class="mt-1 text-lg font-medium text-gray-900">
+          {% set original_price = product[3] | float %}
+          {% set discount = product[7].replace('%', '') | float if product[7] and product[7] != 'None' else 0 %}
+          {% set discounted_price = original_price * (1 - discount / 100) %}
+          {% if discount > 0 %}
+            <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+          {% else %}
+          <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span>
+          {% endif %}
+          <span style="font-size: 0.8em;">NZD</span>
+        </p>
+
+      </a>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-8">
+      <a
+        href="{{ url_for('visitor.all_products',category_id = 3) }}"
+{#        href="#"#}
+        class="inline-block px-6 py-3 rounded-lg bg-black text-white font-semibold shadow-md hover:bg-black transition-colors duration-300"
+        >View More</a
+      >
+    </div>
+  </div>
+</div>
+
+
+<!-- Advertising Section One -->
+
+<div class="bg-white" style="margin-top:-50px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8"
+  >
+    <div
+      class="grid grid-cols-1 "
+    >
+
+{#      <a href="{{ url_for('products_onsale') }}" class="group grid grid-cols-subgrid col-span-5">#}
+      <a href="#" class="group grid grid-cols-subgrid col-span-5">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/hero/banner4.gif') }}"
+            alt="Promotional Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+
+        </div>
+
+      </a>
+{#        <a class=" grid grid-cols-subgrid col-span-1"></a>#}
+{#        <a href="{{ url_for('products_onsale') }}"#}
+{#           class="group  grid grid-cols-subgrid col-span-5">#}
+{#        <div#}
+{#          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"#}
+{#        >#}
+{#          <img#}
+{#            src="{{ url_for('static', filename='assets/img/product/f2.png') }}"#}
+{#            alt="Product Image"#}
+{#            class="h-full w-full object-cover object-center group-hover:opacity-75"#}
+{#          />#}
+{#        </div>#}
+{#      </a>#}
+
+
+    </div>
+
+  </div>
+</div>
+
+    <!-- Overseas products -->
+<div class="bg-white" style="margin-top: -180px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+    <h1 style="font-size: 3em;">OVERSEAS</h1>
+    <p style="padding: 30px 0;">Explore the cultural heritage of Europe and Asia while enjoying exceptional travel experiences abroad.</p>
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 xl:gap-x-8"
+    >
+      {% for product in oversea_products %}
+      <a href="/product/{{ product[0] }}" class="group">
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='producting/' + product[6]) }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+        <h3 class="mt-4 text-sm text-gray-700">{{ product[1] }}</h3>
+        <p class="mt-1 text-lg font-medium text-gray-900">
+          {% set original_price = product[3] | float %}
+          {% set discount = product[7].replace('%', '') | float if product[7] and product[7] != 'None' else 0 %}
+          {% set discounted_price = original_price * (1 - discount / 100) %}
+          {% if discount > 0 %}
+            <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+          {% else %}
+          <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span>
+          {% endif %}
+          <span style="font-size: 0.8em;">NZD</span>
+        </p>
+
+      </a>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-8">
+      <a
+        href="{{ url_for('visitor.all_products',category_id=4) }}"
+{#        href="#"#}
+        class="inline-block px-6 py-3 rounded-lg bg-black text-white font-semibold shadow-md hover:bg-black transition-colors duration-300"
+        >View More</a
+      >
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Delivery Section -->
+
+<div class="bg-white" style="margin-top: -150px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+      <h1 style="font-size: 3em;">Shopping Process</h1>
+      <p style="padding: 30px 0;">Plan your journey with ease – select, book, and enjoy a seamless travel experience.</p>
+    <div
+      class="grid grid-cols-1   "
+    >
+
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+          <img
+            src="{{ url_for('static', filename='assets/img/delivery.png') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          />
+        </div>
+
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- News Section  -->
+
+<div class="bg-white" style="margin-top: -150px;">
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8" style="text-align: center;"
+  >
+    <h1 style="font-size: 3em;">Our Latest Travel Tips</h1>
+      <p style="padding: 30px 0;">Get expert advice and practical tips to make the most of your travels – from visas to packing essentials.</p>
+    <div
+      class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8  "
+    >
+
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+            <a href="{{ url_for('tips', tip_id = 1) }}">
+          <img
+            src="{{ url_for('static', filename='assets/img/blog/news-1.png') }}"
+            alt="Tips Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+
+          /></a>
+        </div>
+
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+            <a href="{{ url_for('tips', tip_id = 2) }}">
+          <img
+            src="{{ url_for('static', filename='assets/img/blog/news-2.png') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          /></a>
+        </div>
+
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+            <a href="{{ url_for('tips', tip_id = 3) }}">
+          <img
+            src="{{ url_for('static', filename='assets/img/blog/news-3.png') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          /></a>
+        </div>
+
+        <div
+          class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7"
+        >
+            <a href="{{ url_for('tips', tip_id = 4) }}">
+          <img
+            src="{{ url_for('static', filename='assets/img/blog/news-4.png') }}"
+            alt="Product Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          /></a>
+        </div>
+
+
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

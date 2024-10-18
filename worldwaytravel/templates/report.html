@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}Report{% endblock %}
+{% block content %}
+
+<h2 class = text-center>Reports</h2>
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
+    <!-- First chart (Pie chart) -->
+    <div style="width: 600px; margin-bottom: 20px;">
+        <h3>Orders Revenue</h3>
+        <p><b>View the revenue of completed orders, processing orders and cancelled orders over a period of time</b></p>
+        <!-- Form for the first chart -->
+        <form id="date-range-form-1" method="POST">
+            <label for="start_date_1">Start Date:</label>
+            <input type="date" id="start_date_1" name="start_date_1" value="{{ default_start_date_1 }}">
+            <label for="end_date_1">End Date:</label>
+            <input type="date" id="end_date_1" name="end_date_1" value="{{ default_end_date_1 }}">
+            <button id="generate-btn-1" type="submit">Generate Chart</button>
+        </form>
+        <div id="plot_div1">{{ plot_div1 | safe }}</div>
+    </div>
+
+    <!-- Second chart (Bar chart) -->
+    <div style="width: 600px;">
+        <h3>Product Preferences By Categories</h3>
+        <p><b>View sales volume of each product category over a period of time</b></p>
+        <!-- Form for the second chart -->
+        <form id="date-range-form-2" method="POST">
+            <label for="start_date_2">Start Date:</label>
+            <input type="date" id="start_date_2" name="start_date_2" value="{{ default_start_date_2 }}">
+            <label for="end_date_2">End Date:</label>
+            <input type="date" id="end_date_2" name="end_date_2" value="{{ default_end_date_2 }}">
+            <button id="generate-btn-2" type="submit">Generate Chart</button>
+        </form>
+        <div id="plot_div2">{{ plot_div2 | safe }}</div>
+    </div>
+
+</div>
+
+{% endblock %}

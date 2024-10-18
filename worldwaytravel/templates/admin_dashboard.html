@@ -1,0 +1,148 @@
+{% extends 'layout.html' %}
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2 style="text-align: center">Welcome to Your Dashboard</h2>
+
+<div class="function-container">
+    <div class="row mt-4">
+        <div class="col-md-4">
+          <a href="{{ url_for('administrator.admin_profile') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-user" style="font-size: 2rem"></i> My Profile</h5>
+                <p class="card-text">View and update profile information and change password.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ url_for('manager.manage_customer') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-user-cog" style="font-size: 2rem"></i> Manage Customers</h5>
+                <p class="card-text">Add, view, update, and active/inactive customer accounts.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ url_for('manager.manage_staff') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-user-tie" style="font-size: 2rem"></i> Manage Salesperson</h5>
+                <p class="card-text">Add, view, update, and active/inactive Salerperson accounts.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      
+        <div class="col-md-4">
+          <a href="{{ url_for('staff.orders') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-shopping-cart" style="font-size: 2rem"></i> Customer Orders</h5>
+                <p class="card-text">View and manage customer orders to ensure timely processing.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ url_for('staff.staff_products') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-boxes" style="font-size: 2rem"></i> Manage Products</h5>
+                <p class="card-text">View and update product details such as price, descriptions, and images.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ url_for('staff.staff_inventory') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-warehouse" style="font-size: 2rem"></i> Manage Seating Number</h5>
+                <p class="card-text">View and update travel product seating numbers to ensure accuracy.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ url_for('administrator.manage_category') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-list-alt" style="font-size: 2rem"></i> Manage Category</h5>
+                <p class="card-text">Add, view, update, and delete categories efficiently and effectively.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        {#<div class="col-md-4">
+          <a href="{{ url_for('administrator.manage_shipping') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-shipping-fast" style="font-size: 2rem"></i> Shipping Options</h5>
+                <p class="card-text">Add, view, update, and delete shipping options efficiently and effectively.</p>
+              </div>
+            </div>
+          </a>
+        </div>#}
+        {#<div class="col-md-4">
+          <a href="/manager/loyalty_setting" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-trophy" style="font-size: 2rem"></i>Manage Points</h5>
+                <p class="card-text">View and edit customer loyalty points settings.</p>
+              </div>
+            </div>
+          </a>
+        </div>#}
+        {#<div class="col-md-4">
+          <a href="{{ url_for('manager.manage_credit') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-credit-card" style="font-size: 2rem"></i> Manage Credit Limit</h5>
+                <p class="card-text">View and reply credit apply from customers to control financial exposure.</p>
+              </div>
+            </div>
+          </a>
+        </div>#}
+{#        <div class="col-md-4">#}
+{#          <a href="{{ url_for('manager.manage_account') }}" class="card-link">#}
+{#            <div class="card">#}
+{#              <div class="card-body">#}
+{#                <h5 class="card-title"><i class="fas fa-user-cog" style="font-size: 2rem"></i> Manage Account</h5>#}
+{#                <p class="card-text">View and edit customer credit account to control financial exposure.</p>#}
+{#              </div>#}
+{#            </div>#}
+{#          </a>#}
+{#        </div>#}
+        <div class="col-md-4">
+          <a href="{{ url_for('staff.view_messages') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i> Messages</h5>
+                <p class="card-text">View and reply messages from customers to maintain high service quality.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a href="{{ url_for('manager.customer_report') }}" class="card-link">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-chart-line" style="font-size: 2rem"></i>Reports</h5>
+                <p class="card-text">Generate reports on revenue, purchasing patterns, and product preferences.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+</div>   
+
+
+{% endblock %}

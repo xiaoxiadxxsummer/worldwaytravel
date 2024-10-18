@@ -1,0 +1,83 @@
+{% extends 'layout.html' %} {% block title %}Manage Account{% endblock %} {%
+block content %}
+
+<h2 class="text-center">Manage Account</h2>
+
+<!-- Table to display messages -->
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Customers ID</th>
+        <th>Customers Name</th>
+        <th>Remaining Credit</th>
+        <th>Credit Limit</th>
+        <th>Customers Status</th>
+        <th>Modify Credit Limit</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in customers_account %}
+      <tr>
+        <td>{{ account[0] }}</td>
+        <td>{{ account[1] }}</td>
+        <td class="{% if account[2] != -1 and account[3] != -1 and account[2] < 0.15 * account[3]|float %}text-danger{% endif %}">
+          {% if account[2] == -1 %}NaN{% else %}{{ account[2] }}{% endif %}
+        </td>
+        <td>
+          {% if account[3] == -1 %}NaN{% else %}{{ account[3] }}{% endif %}
+        </td>
+        <td>{{ account[4] }}</td>
+        <td>
+          <form
+            action="{{ url_for('manager.modify_credit_limit', id=account[0]) }}"
+            method="POST"
+          >
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                name="new_credit_limit"
+                placeholder="New Credit Limit"
+                min="1000"
+                required
+              />
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Update</button>
+              </div>
+            </div>
+          </form>
+        </td>
+        <td>
+          {% if account[4] == 'Active' %}
+          <div class="btn-container">
+            <form
+              action="{{ url_for('manager.manage_customer_status', id=account[0]) }}"
+              method="POST"
+            >
+              <input type="hidden" name="user_id" value="{{ account[0] }}" />
+              <input type="hidden" name="status" value="Inactive" />
+              <button type="submit" class="btn btn-danger">Inactive</button>
+            </form>
+          </div>
+          {% else %}
+          <div class="btn-container">
+            <form
+              action="{{ url_for('manager.manage_customer_status', id=account[0]) }}"
+              method="POST"
+            >
+              <input type="hidden" name="user_id" value="{{ account[0] }}" />
+              <input type="hidden" name="status" value="Active" />
+              <button type="submit" class="btn btn-success">Active</button>
+            </form>
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

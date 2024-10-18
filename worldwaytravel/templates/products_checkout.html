@@ -1,0 +1,377 @@
+{% extends 'layout.html' %} {% block title %}  {% endblock %} {% block
+content %}
+<div class="row">
+  <!-- Cart Content -->
+  <div class="col-8 cart-container">
+    <h3 class="text-center">Shopping Cart</h3>
+    <form
+      action="{{ url_for('customer.make_payment') }}"
+      method="POST"
+      id="submit_order"
+    >
+      <ul class="list-group">
+        {% for order in order_checkout %}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex align-items-center">
+            <img
+              src="{{ url_for('static', filename='producting/' + order[4]) }}"
+              alt="Product Image"
+              class="product-image"
+            />
+            <span class="ms-3">{{ order[1] }}</span>
+          </div>
+          <span class="badge bg-primary rounded-pill me-3">{{ order[2] }}</span>
+          <p class="ml-4">${{ order[5] }}</p>
+        </li>
+        {% endfor %}
+        {#<li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex flex-column align-items-start">
+            <span class="ms-3"
+              >Total Price (inclusive of GST and shipping)</span
+            >
+            <input
+              type="hidden"
+              id="original_total_price"
+              name="original_total_price"
+              value=0
+            />
+            <small id="sub_cost" class="ms-3 text-muted"
+              >Goods: ${{ sub_cost }}</small
+            >
+            <div class="ms-3 mt-2">
+              <label for="shipping_method">Select Shipping Method:</label>
+              <select
+                id="shipping_method"
+                name="shipping_method"
+                class="form-select mt-1"
+                onchange="updateTotalPrice()"
+              >
+                {% if total_shipping_cost != 0 %}
+                <option value="{{ total_shipping_cost }}">
+                  Standard Shipping ${{ total_shipping_cost }}
+                </option>
+                <option value="freight_by_request">Freight by Request</option>
+                {% endif %}
+                <option value="pick_up">Pick Up</option>
+              </select>
+            </div>
+          </div>
+          <p id="total_price_display" class="ml-4 text-lg">
+            ${{ total_price }}
+          </p>
+          <input
+            type="hidden"
+            id="total_price_input"
+            name="total_price"
+            value="{{ total_price }}"
+          />
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex align-items-center">
+            <span class="ms-3">GiftCard</span>
+          </div>
+          <select
+            class="form-select"
+            id="giftCardSelect"
+            name="giftCardSelect"
+            onchange="updateTotalPrice()"
+          >
+            <option value="0">Do Not Apply</option>
+            {% for giftcard in giftcard_info %}
+            <option value="{{ giftcard[0] }}">${{ giftcard[2] }}</option>
+            {% endfor %}
+          </select>
+        </li>
+#}
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex align-items-center">
+            <span class="ms-3">Use Credit ({{ credit }} points)</span>
+          </div>
+          <select
+            class="form-select"
+            id="useCreditSelect"
+            name="useCreditSelect"
+            onchange="updateTotalPrice()"
+          >
+            <option value=0>No</option>
+            <option value=1>Yes</option>
+          </select>
+        </li>
+      <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div class="d-flex align-items-center">
+            <span class="ms-3">Total to pay</span>
+          </div>
+          <p id="total_price_display" class="ml-4 text-lg">
+            ${{ total_price }} (includes 15% GST)
+          </p>
+          <input
+            type="hidden"
+            id="total_price_input"
+            name="total_price"
+            value="{{ total_price }}"
+          />
+          <input
+              type="hidden"
+              id="original_total_price"
+              name="original_total_price"
+              value=0
+            />
+          <input
+                id="shipping_method"
+                name="shipping_method"
+              type="hidden"
+              value="1"
+              />
+      </li>
+      </ul>
+      <div class="text-end mt-3">
+        <button type="button" class="btn btn-primary" style="background-color: #000;border-color: #000;" id="trigger_modal">
+          Proceed to Checkout
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Customer Information -->
+  <div class="col-md-4 mt-4 mt-md-0">
+    <h3 class="text-center">Customer Information</h3>
+    <form>
+      <div class="mb-3">
+        <label for="name_display" class="form-label">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name_display"
+          value="{{ full_name }}"
+          readonly
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          value="{{ cus_info[5] }}"
+          readonly
+        />
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Passport Info</label>
+        <textarea class="form-control" id="address" rows="3" readonly>
+{{ cus_info[7] }}</textarea
+        >
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="payModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Make a payment</h5>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="payment_form">
+          <div class="form-group">
+            <label for="card_number">Card Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="card_number"
+              placeholder="Card Number"
+              pattern="[0-9]{16}"
+              title="Please enter a 16-digit card number"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16);"
+              required
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="card_name">Name on Card</label>
+              <input
+                type="text"
+                class="form-control"
+                id="card_name"
+                placeholder="Name"
+                pattern="[A-Za-z ]+"
+                title="Please enter only letters and spaces"
+                oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')"
+                required
+              />
+            </div>
+            <div class="form-group col-md-3">
+              <label for="expiry_mm">MM</label>
+              <input
+                type="text"
+                class="form-control"
+                id="expiry_mm"
+                placeholder="MM"
+                pattern="[0-9]{1,2}"
+                title="Please enter a number between 1 and 12"
+                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value, 10) > 12) {this.value = '';}"
+                required
+              />
+            </div>
+            <div class="form-group col-md-3">
+              <label for="expiry_yy">YY</label>
+              <input
+                type="number"
+                class="form-control"
+                id="expiry_yy"
+                placeholder="YY"
+                min="2024"
+                max="2099"
+                oninput="this.value = Math.max(Math.min(this.value, 2099), 2024);"
+                required
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cvc">CVC</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cvc"
+                placeholder="CVC"
+                minlength="3"
+                maxlength="4"
+                pattern="[0-9]{3,4}"
+                title="Please enter a valid CVC (3-4 digits)"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                required
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-update" id="complete_payment">
+          Complete Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var originalTotalPrice
+
+  function updateTotalPrice() {
+    {#var shippingMethod = document.getElementById("shipping_method")#}
+      originalTotalPrice = {{ total_price }}
+    var subPrice = {{ total_price }}
+    var totalPriceDisplay = document.getElementById("total_price_display")
+
+    {#var giftCardSelectedOption =#}
+    {#  document.getElementById("giftCardSelect").options[#}
+    {#    document.getElementById("giftCardSelect").selectedIndex#}
+    {#  ]#}
+
+    var useCreditSelectedOption =
+      document.getElementById("useCreditSelect").options[
+        document.getElementById("useCreditSelect").selectedIndex
+      ]
+
+    {#var giftCardValueText = giftCardSelectedOption.text#}
+    {#var matchResult = giftCardValueText.match(/[\d.]+/g)#}
+    {##}
+    {#var giftCardValue = matchResult ? parseFloat(matchResult.join("")) : 0#}
+
+    var useCreditSelectedValue = useCreditSelectedOption.value
+
+    {#var subCost = parseFloat(subPrice.replace(/[^\d.]/g, ""))#}
+    {#var shippingCost = parseFloat(shippingMethod.value)#}
+    {##}
+    {#if (#}
+    {#  shippingMethod.value === "freight_by_request" ||#}
+    {#  shippingMethod.value === "pick_up"#}
+    {#) {#}
+    {#  shippingCost = 0#}
+    {#}#}
+    {##}
+    {#originalTotalPrice = (subCost + shippingCost) * 1.15#}
+    var totalPrice = subPrice
+
+
+    {#var totalPrice = originalTotalPrice - giftCardValue#}
+    if (totalPrice < 0) {
+      totalPrice = 0
+    }
+
+
+      document.getElementById("trigger_modal").innerText = "Complete Payment"
+      document.getElementById("trigger_modal").onclick = function() {
+        document.getElementById("#payModal").modal("show")
+    }
+
+
+    var credit = parseInt("{{ credit }}", 10);
+    if(useCreditSelectedValue == 1 && totalPrice > 0) {
+      if(credit >= totalPrice) {
+        totalPrice = 0
+          document.getElementById("trigger_modal").innerText = "Complete Order"
+          document.getElementById("trigger_modal").onclick = function() {
+        document.getElementById('submit_order').submit();
+        }
+      } else {
+        totalPrice = totalPrice - credit
+      }
+    }
+
+
+    totalPriceDisplay.textContent = "$" + totalPrice.toFixed(2) + ' (includes 15% GST)'
+    document.getElementById("original_total_price").value = originalTotalPrice.toFixed(2)
+    var totalPriceInput = document.getElementById("total_price_input")
+    totalPriceInput.value = totalPrice.toFixed(2)
+  }
+
+  function getOriginalTotalPrice() {
+    return originalTotalPrice
+  }
+
+  document
+    .getElementById("trigger_modal")
+    .addEventListener("click", function () {
+      $("#payModal").modal("show")
+    })
+
+    document.getElementById('complete_payment').addEventListener('click', function() {
+    var cardNumber = document.getElementById('card_number').value.trim();
+    var cardName = document.getElementById('card_name').value.trim();
+    var expiryMM = document.getElementById('expiry_mm').value.trim();
+    var expiryYY = document.getElementById('expiry_yy').value.trim();
+    var cvc = document.getElementById('cvc').value.trim();
+
+    // Check if any field is empty
+    if (cardNumber === '' || cardName === '' || expiryMM === '' || expiryYY === '' || cvc === '') {
+      alert('Please fill in all required fields.');
+      return false;
+    }
+
+    // If all validations pass, submit the form
+    document.getElementById('submit_order').submit();
+  });
+</script>
+{% endblock %}

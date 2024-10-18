@@ -1,0 +1,95 @@
+{% extends "layout.html" %} {% block content %}
+<body>
+  <div class="function-container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="text-center">
+          <h1>Apply for Credit</h1>
+          <br />
+        </div>
+        <form
+          action="{{ url_for('customer.apply_credit') }}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <h2>Company Information</h2>
+          <div class="mb-3">
+            <label for="company_name"><b>Company Name:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="company_name"
+              name="company_name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="company_address"><b>Company Address:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="company_address"
+              name="company_address"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="company_registration_number"
+              ><b>Company Registration Number:</b></label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="company_registration_number"
+              name="company_registration_number"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <div class="msg">{{ msg }}</div>
+            <label for="message"><b>Message:</b></label>
+            <textarea
+              class="form-control"
+              id="message"
+              name="message"
+            ></textarea>
+            <label><b>Type:</b></label>
+            <div>
+              <input
+                type="radio"
+                id="apply_credit"
+                name="message_type"
+                value="apply_credit"
+                checked
+              />
+              <label for="apply_credit">Apply for Credit</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="standard"
+                name="message_type"
+                value="standard"
+              />
+              <label for="standard">More Credit</label>
+            </div>
+          </div>
+
+          <div style="height: 10px"></div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="window.history.back();"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

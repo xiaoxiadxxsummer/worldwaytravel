@@ -1,0 +1,101 @@
+{% extends 'layout.html' %} 
+{% block title %}Manage Salesperson{% endblock %}
+{% block content %} 
+'
+<h2 class="text-center">Staff Management</h2>
+<div class = "function-container">
+  <div class="d-flex justify-content-start align-items-start">
+    <a href="{{ url_for('manager.add_staff') }}" class="btn btn-success"
+      >Add A New Salesperson</a
+    >&nbsp&nbsp
+  </div>
+  <!-- search is the name of the input passed through -->
+  <br />
+  <form
+    class="row g-3 form-inline justify-content-start needs-validation"
+    action="{{ url_for('manager.search_staff') }}"
+    method="post"
+  >
+    <div class="col-md-7">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="search"
+          placeholder="Enter Salesperson name to search"
+          required
+        />
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+    </div>
+  </form>
+  <br />
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <caption style="caption-side: top" class="h3 text-center">
+        Salesperson List
+      </caption>
+
+      <thead>
+        <tr>
+          <th class="text-center">Username</th>
+          <th class="text-center">Name</th>
+          <th class="text-center">Email</th>
+          <th class="text-center">Phone</th>
+          <th class="text-center">Manage</th>
+        </tr>
+      </thead>
+      {% for account in accountlist %}
+      <tr>
+        <td class="text-center">{{ account[1] }}</td>
+        <td class="text-center">{{ account[5] }} {{ account[6] }}</td>
+        <td class="text-center">{{ account[9] }}</td>
+        <td class="text-center">{{ account[10] }}</td>
+        <td class="text-center">
+          <div class="btn-group">
+            <div class="btn-container">
+              <a
+                href="{{ url_for('manager.view_staff', id=account[0]) }}"
+                class="btn btn-primary"
+                >View Details</a
+              >
+            </div>
+            <div class="btn-container">
+              <a
+                href="{{ url_for('manager.update_staff', id=account[0]) }}"
+                class="btn btn-primary"
+                >Update</a
+              >
+            </div>
+            {% if account[12] == 'Active' %}
+            <div class="btn-container">
+              <form
+                action="{{ url_for('manager.change_staff_status', id=account[0]) }}"
+                method="POST"
+              >
+                <input type="hidden" name="user_id" value="{{ account[0] }}" />
+                <input type="hidden" name="status" value="Inactive" />
+                <button type="submit" class="btn btn-danger">Inactive</button>
+              </form>
+            </div>
+            {% else %}
+            <div class="btn-container">
+              <form
+                action="{{ url_for('manager.change_staff_status', id=account[0]) }}"
+                method="POST"
+              >
+                <input type="hidden" name="user_id" value="{{ account[0] }}" />
+                <input type="hidden" name="status" value="Active" />
+                <button type="submit" class="btn btn-success">Active</button>
+              </form>
+            </div>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'layout.html' %} {% block content %}
+
+<div id="products-container" class="bg-white p-4">
+  <h2 class="text-center text-2xl font-bold mb-4">Find Your Favorites</h2>
+
+  <!-- Search bar -->
+  <div class="search-bar-container text-center" style="margin-bottom: 20px">
+    <form
+      action="{{ url_for('visitor.search_products') }}"
+      method="get"
+      style="display: inline-block"
+    >
+      <input
+        type="text"
+        id="search"
+        name="search"
+        placeholder="What are you looking for?"
+        style="
+          font-size: 1em;
+          padding: 4px;
+          border: 1px solid #ccc;
+          width: 500px;
+          display: inline-block;
+          vertical-align: middle;
+        "
+      />
+      <button
+        type="submit"
+        style="
+          font-size: 0.8em;
+          padding: 2px 8px;
+          background-color: #f0f0f0;
+          color: #333;
+          border: 1px solid #f0f0f0;
+          border-radius: 5px;
+          vertical-align: middle;
+          margin-top: 2px;
+        "
+      >
+        <img
+          src="{{ url_for('static', filename='uploads/' + 'search_icon.jpg') }}"
+          alt="Search Icon"
+          style="width: 30px; height: 30px"
+        />
+      </button>
+    </form>
+  </div>
+
+  <!-- Price range filter -->
+  <div
+    class="price-range-container"
+    style="text-align: right; margin-bottom: 20px"
+  >
+    <label for="price_range" style="font-size: 1em"><b>Price Range:</b></label>
+    <select
+      name="price_range"
+      id="price_range"
+      style="font-size: 1em; padding: 4px; border: 1px solid #ccc"
+    >
+      <option value="0-50">Below $50</option>
+      <option value="50-100">$50 - $100</option>
+      <option value="100-200">$100 - $200</option>
+      <option value="200-500">$200 - $500</option>
+      <option value="500-">Above $500</option>
+    </select>
+  </div>
+
+  <!-- Show products -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+  >
+    {% for product in products_ca %}
+    <a
+      href="{{ url_for('visitor.view_product', product_id=product[0]) }}"
+      class="card-link"
+    >
+      <div class="card" style="width: 17rem; height: 26rem">
+        <img
+          src="{{ url_for('static', filename='producting/' + product[6] if product[6] else 'default.png') }}"
+          class="card-img-top"
+          alt="Product Image"
+          style="
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+            height: 200px;
+          "
+        />
+        <div class="card-body">
+          <h5 class="card-title" style="font-size: 1.3em; overflow: hidden">
+            {{ product[1] }}
+          </h5>
+          <p class="card-text" style="font-size: 0.9em; overflow: hidden">
+            {{ product[4] }}
+          </p>
+          <p class="card-text">
+            {% set original_price = product[3] | float %}
+            {% set discount = product[7].replace('%', '') | float if product[7] and product[7] != 'None' else 0 %}
+            {% set discounted_price = original_price * (1 - discount / 100) %}
+            {% if discount > 0 %}
+              <span style="font-size: 1.0em;"><b><s>${{ original_price | round(2) }}</s> <span class="discounted-price">${{ discounted_price | round(2) }}</span></b></span>
+            {% else %}
+            <span style="font-size: 1.0em;"><b>${{ original_price | round(2) }}</b></span> 
+            {% endif %}
+            <span style="font-size: 0.8em;">NZD</span>
+          </p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("price_range")
+    .addEventListener("change", function () {
+      var selectedValue = this.value
+      var currentUrl = window.location.href
+      var url = new URL(currentUrl)
+      url.searchParams.set("price_range", selectedValue)
+      window.location.href = url.toString()
+    })
+</script>
+
+{% endblock %}

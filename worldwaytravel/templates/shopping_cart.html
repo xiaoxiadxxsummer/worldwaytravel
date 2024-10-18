@@ -1,0 +1,131 @@
+{% extends 'layout.html' %} {% block title %}  {% endblock %} {% block
+content %}
+<div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+  <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+    <h2 style="text-align: center">Shopping cart</h2>
+
+    <!-- Product list -->
+    <div class="mt-8">
+      <div class="flow-root">
+        <ul role="list" class="-my-6 divide-y divide-gray-200">
+          {% for detail in order_details %}
+          <li class="flex py-6">
+            <div
+              class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+            >
+              <img
+                src="{{ url_for('static', filename='producting/' + detail[4]) }}"
+                alt="Product Image"
+                class="h-full w-full object-cover object-center"
+              />
+            </div>
+
+            <div class="ml-4 flex flex-1 flex-col">
+              <div>
+                <div
+                  class="flex justify-between text-base font-medium text-gray-900"
+                >
+                  <h3>
+                    <a href="#">{{ detail[1] }}</a>
+                  </h3>
+                  <p class="ml-4">${{ detail[3] }}</p>
+                </div>
+              </div>
+              <div class="flex flex-1 items-center justify-end text-sm">
+                <p class="text-gray-600">Qty</p>
+                <input
+                  type="number"
+                  min="1"
+                  value="{{ detail[2] }}"
+                  class="w-12 border border-gray-200 rounded-md px-2 py-1"
+                  onchange="updateQuantity(this.value, '{{ detail[0] }}')"
+                />
+              </div>
+              <div>
+                <button
+                  type="button"
+                  class="text-indigo-600 hover:text-indigo-500"
+                  onclick="removeFromCart('{{ detail[0] }}')"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout and continue shopping -->
+  <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+    <div class="flex justify-between text-base font-medium text-gray-900">
+      <p>Subtotal</p>
+      <p>${{ product_cost }}</p>
+    </div>
+    <p class="mt-0.5 text-sm text-gray-500">
+      Taxes calculated at checkout.
+    </p>
+    <div class="mt-6">
+      <a
+      href="{{ url_for('customer.check_out') }}"
+        class="flex items-center justify-center rounded-md border border-transparent bg-black px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-black"
+        >Checkout</a
+      >
+    </div>
+
+    <!-- Show continue shopping button -->
+    <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+      <p>
+        or
+        <a
+          href="{{ url_for('visitor.all_products') }}"
+          class="font-medium text-black hover:text-black"
+        >
+          Continue Shopping
+          <span aria-hidden="true"> &rarr;</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateQuantity(quantity, detailId) {
+    var xhr = new XMLHttpRequest()
+    xhr.open("POST", "/update_quantity", true)
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          console.log(xhr.responseText)
+          window.location.reload()
+        } else {
+          console.error("error:" + xhr.status)
+        }
+      }
+    }
+
+    xhr.send(JSON.stringify({ quantity: quantity, detailId: detailId }))
+  }
+
+  function removeFromCart(detailId) {
+    var xhr = new XMLHttpRequest()
+    xhr.open("POST", "/remove_from_cart", true)
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          console.log(xhr.responseText)
+          window.location.reload()
+        } else {
+          console.error("error" + xhr.status)
+        }
+      }
+    }
+    xhr.send(JSON.stringify({ detailId: detailId }))
+  }
+</script>
+
+{% endblock %}

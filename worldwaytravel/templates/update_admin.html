@@ -1,0 +1,146 @@
+{% extends "layout.html" %} {% block content %}
+<body>
+  <div class="function-container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="text-center">
+          <h1>Edit Profile</h1>
+          <br />
+        </div>
+        <form
+          action="{{ url_for('administrator.update_admin')}}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label for="username" class="form-label"><b>Username:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              value="{{account[1]}}"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="title" class="form-label"><b>Title:</b></label>
+            <select id="title" name="title" class="form-select">
+                            <option value="Mr" {% if admin_info[3] == 'Mr' %} selected {% endif %}>Mr</option>
+                            <option value="Mrs" {% if admin_info[3] == 'Mrs' %} selected {% endif %}>Mrs</option>
+                            <option value="Miss" {% if admin_info[3] == 'Miss' %} selected {% endif %}>Miss</option>
+                            <option value="Ms" {% if admin_info[3] == 'Ms' %} selected {% endif %}>Ms</option>
+                        </select>
+          </div>
+          <div class="mb-3">
+            <label for="firstname" class="form-label"><b>Firstname:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstname"
+              name="firstname"
+              value="{{admin_info[1] }}"
+              pattern="[a-zA-Z]+"
+              title="Invalid Firstname!"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="lastname" class="form-label"><b>Lastname:</b></label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastname"
+              name="lastname"
+              value="{{ admin_info[2] }}"
+              pattern="[a-zA-Z]+"
+              title="Invalid Lastname!"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label"><b>Phone Number:</b></label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              name="phone"
+              value="{{ admin_info[6] }}"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label"><b>Email:</b></label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              value="{{ admin_info[5] }}"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="joindate" class="form-label"
+              ><b>Date of Join:</b></label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="joindate"
+              name="joindate"
+              value="{{admin_info[4]}}"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="profile_image" class="form-label"
+              ><b>Profile Image:</b></label
+            >
+            <input
+              type="file"
+              class="form-control"
+              id="profile_image"
+              name="profile_image"
+              multiple
+            />
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label"
+              ><b>Select Status Type:</b></label
+            >
+            <select id="status" name="status" class="form-select" required>
+              <option value="1">Active</option>
+              <option value="2">Inactive</option>
+            </select>
+          </div>
+          <div class="msg">{{ msg }}</div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="redirectToProfile()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+    function redirectToProfile() {
+    window.location.href = "{{ url_for('administrator.admin_profile') }}"
+  }
+
+  document.querySelector("form").addEventListener("submit", function (event) {
+    var phoneInput = document.getElementById("phone")
+    var phonePattern = /^(0[2-9]\d{2}-?\d{3}-?\d{3}|0[2-9]\d{8})$/
+
+    if (!phonePattern.test(phoneInput.value)) {
+      event.preventDefault()
+      document.querySelector(".msg").innerText =
+        "Invalid phone number format. Please enter a valid New Zealand phone number."
+    }
+  })
+</script>
+{% endblock %}

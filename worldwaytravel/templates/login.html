@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+    />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <div class="login">
+      <h1>Login</h1>
+      <div class="links">
+        <a href="{{ url_for('login.login_page') }}" class="active">Login</a>
+        <a href="{{ url_for('register.register_route') }}">Register</a>
+        <a href="{{ url_for('visitor_home') }}"
+          ><i class="fas fa-times"></i>
+        </a>
+      </div>
+      <form action="{{ url_for('login.login_page') }}" method="post">
+        <label for="username">
+          <i class="fas fa-user"></i>
+        </label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          id="username"
+          required
+        />
+        <label for="password">
+          <i class="fas fa-lock"></i>
+        </label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          id="password"
+          required
+        />
+          <img
+            src="{{ url_for('static', filename='/assets/img/CAPTCHA.png') }}"
+            alt="CAPTCHA Image"
+            class="h-full w-full object-cover object-center group-hover:opacity-75"
+          /><button style="font-size:24px"><i  onclick="location.reload()" class="fas fa-refresh"></i></button>
+          <input
+          type="text"
+          name="captcha"
+          placeholder="captcha"
+          id="captcha"
+          required
+          style="text-align: center;"
+        />
+        <div class="msg">{{ msg }}</div>
+        <input type="submit" value="Login" />
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,445 @@
+{% extends 'layout.html' %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+
+
+<div class="function-container">
+  <div class="mb-3">
+    <h1>Message</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Message</th>
+          <th>Time</th>
+          <th>Direction</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mess in messages %}
+        <tr>
+          <td style="color: {{ 'blue' if mess[2] == 'sent' else 'green' }}">{{ mess[0] }}</td>
+          <td><span class="message-date">{{ mess[1] }}</span></td>
+          <td>{{ mess[2] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a
+    href="{{ url_for('customer.send_message')}}"
+    class="btn btn-success" style="display: block;"
+    >Message Us</a
+  >
+  </div>
+</div>
+
+
+
+
+
+
+<div class="function-container">
+  <div class="mb-3">
+
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <li><strong>{{ message }}</strong></li>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <h1>Order History</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Order Date</th>
+          <th>Total Cost</th>
+          <th>Status</th>
+{#          <th>Shipping Type</th>#}
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in order_history %}
+        <tr>
+          <td>{{ order[0] }}</td>
+          <td>{{ order[1].strftime('%d/%m/%Y') }}</td>
+          <td>${{ order[2] }}</td>
+          <td>
+            {% if order[3] == 'Cancelled' %}
+              <span class="text-danger">{{ order[3] }}</span>
+            {% else %}
+              {{ 'Ready for Pickup' if order[4] == 'pick_up' and order[3] == 'Delivered' else order[3] }}
+            {% endif %}
+            {% if order_changed[order[0]] %}
+            <span class="status-changed" id="bell-icon-{{ order[0] }}">
+              <a
+              href="{{ url_for('customer.view_order_detail', order_id=order[0]) }}" data-order-id="{{ order[0] }}"
+           onclick="markAsViewed(this); return false;" ><i class="fas fa-bell"></i></span>
+            {% endif %}
+          </td>
+{#          <td>{{ order[4] }}</td>#}
+          <td>
+            <a
+              href="{{ url_for('customer.view_order_detail', order_id=order[0]) }}"
+              class="btn btn-primary"
+              data-order-id="{{ order[0] }}"
+              style="background-color: #000;border-color: #000;"
+              onclick="markAsViewed(this); return true;"
+            >
+              View Details
+            </a>
+            {% if order[3] == 'Pending' or order[3] == 'Progressing' %}
+            <form action="{{ url_for('customer.cancel_order', order_id=order[0]) }}" method="POST" class="d-inline">
+              <button type="button" class="btn btn-danger cancel-btn" data-order-id="{{ order[0] }}">Cancel</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="function-container">
+  <div>
+    <h2 style="text-align: center">My Profile</h2>
+
+
+    <div class="row" style="text-align: -webkit-center;">
+      <div class="col-md-6">
+        <table class="table">
+          <tr>
+            <td>Username:</td>
+            <td>{{ account[1] }}</td>
+          </tr>
+          <tr>
+            <td>Title:</td>
+            <td>{{ customer_info[3] }}</td>
+          </tr>
+          <tr>
+            <td>First Name:</td>
+            <td>{{ customer_info[1] }}</td>
+          </tr>
+          <tr>
+            <td>Last Name:</td>
+            <td>{{ customer_info[2] }}</td>
+          </tr>
+          <tr>
+            <td>Date of Birth:</td>
+            <td><span class="date-of-birth">{{ customer_info[4] }}</span></td>
+          </tr>
+          <tr>
+            <td>Email:</td>
+            <td>{{ customer_info[5] }}</td>
+          </tr>
+          <tr>
+            <td>Phone Number:</td>
+            <td>{{ customer_info[6] }}</td>
+          </tr>
+          <tr>
+            <td>Passport Info:</td>
+            <td>{{ customer_info[7] }}</td>
+          </tr>
+          {#<tr>
+            <td>Points Balance:</td>
+            <td>
+              <div
+                class="progress"
+                role="progressbar"
+                aria-label="Success example"
+                aria-valuenow="{{ remaining_point_percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div
+                  class="progress-bar bg-success"
+                  style="width: {{ remaining_point_percent }}%"
+                >
+                  {{ customer_info[8] }}/{{ setting | int }}
+                </div>
+              </div>
+            </td>
+          </tr>#}
+{#          {% if account_status %}#}
+          <tr>
+            <td>Remaining Credit:</td>
+            <td>
+              <div
+                class="progress"
+                role="progressbar"
+                aria-label="Success example"
+                aria-valuenow="{{ remaining_credit_percent }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                <div
+                  class="progress-bar bg-success"
+                  style="width: {{ remaining_credit_percent }}%"
+                >
+{#                  {{ customer_info[10] }}/{{ customer_info[9] }}#}
+                  {{ customer_info[10] }}
+                </div>
+              </div>
+            </td>
+          </tr>
+          {#{% elif apply_credit_exists and not reply_credit_exists %}
+          <tr>
+            <td>Activate Credit:</td>
+            <td>Application Submitted</td>
+          </tr>
+          {% elif reply_credit_exists %}
+            {% if reply_status == 'approve' %}
+            <tr>
+              <td>Remaining Credit:</td>
+              <td>
+                <div
+                  class="progress"
+                  role="progressbar"
+                  aria-label="Success example"
+                  aria-valuenow="{{ remaining_credit_percent }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <div
+                    class="progress-bar bg-success"
+                    style="width: {{ remaining_credit_percent }}%"
+                  >
+                    {{ customer_info[10] }}/{{ customer_info[9] }}
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% elif reply_status == 'decline' %}
+            <tr>
+              <td>Activate Credit:</td>
+              <td>Apply Declined
+                <a
+                  href="{{ url_for('customer.apply_credit')}}"
+                  class="btn btn-success"
+                  >Apply Again</a
+                >
+              </td>
+            </tr>
+            {% endif %}
+          {% else %}
+          <tr>
+            <td>Activate Credit:</td>
+            <td>
+              <a
+                href="{{ url_for('customer.apply_credit')}}"
+                class="btn btn-success"
+                >Apply</a
+              >
+            </td>
+          </tr>#}
+{#          {% endif %}#}
+        </table>
+      </div>
+      <div class="col-md-6">
+        {% if customer_info[11] %} {% if
+        customer_info[11].startswith('uploads/') %}
+        <img
+          src="{{ url_for('static', filename=customer_info[11]) }}"
+          alt="Profile Image"
+          class="img-thumbnail"
+          style="max-width: 200px; border-radius: 10px"
+        />
+        {% else %}
+        <img
+          src="{{ url_for('static', filename='uploads/' + customer_info[11]) }}"
+          alt="Default Profile Image"
+          class="img-thumbnail"
+          style="max-width: 200px; border-radius: 10px"
+        />
+        {% endif %} {% else %}
+        <img
+          src="{{ url_for('static', filename='uploads/profile.jpg') }}"
+          alt="Default Profile Image"
+          class="img-thumbnail"
+          style="max-width: 200px; border-radius: 10px"
+        />
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{#  <a#}
+{#  href="{{ url_for('customer.apply_credit')}}"#}
+{#  class="btn btn-success"#}
+{#  >More Credit</a#}
+{#>&nbsp&nbsp#}
+<div style="display: grid;">
+  <a href="{{ url_for('customer.profile_edit')}}" style="background-color: #000;border-color: #000;" class="btn btn-primary"
+    >Update Profile</a
+  >&nbsp&nbsp
+  <button
+    type="button"
+    class="btn btn-primary"
+    style="background-color: #000;border-color: #000;"
+    onclick="toggleChangePasswordForm(true)"
+  >
+    Change Password
+  </button>
+</div>
+  <div style="height: 10px;"></div>
+  <!-- hidden password changing -->
+  <div id="changePasswordForm" style="display: none; text-align: -webkit-center; padding: 0px 27em;">
+    <form action="{{ url_for('customer.change_password') }}" method="POST">
+      <input
+        type="password"
+        class="form-control"
+        id="newPassword"
+        name="newPassword"
+        placeholder="New Password"
+        required
+        minlength="8"
+        pattern="^(?=.*\d)(?=.*[a-zA-Z]).{8,}$"
+        title="Password must be at least 8 characters long and contain both letters and numbers."
+      />
+      <input
+        type="password"
+        class="form-control"
+        id="confirmPassword"
+        name="confirmPassword"
+        placeholder="Confirm New Password"
+        required
+        minlength="8"
+        pattern="^(?=.*\d)(?=.*[a-zA-Z]).{8,}$"
+        title="Password must be at least 8 characters long and contain both letters and numbers."
+      />
+      <div style="height: 10px"></div>
+      <button type="submit" class="btn btn-success">Submit</button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="toggleChangePasswordForm(false)"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+  //change password
+  function toggleChangePasswordForm(showForm) {
+    var form = document.getElementById("changePasswordForm")
+    var changePasswordRow = document.getElementById("changePasswordRow")
+
+    if (showForm) {
+      form.style.display = "flex"
+      changePasswordRow.style.display = "none"
+    } else {
+      form.style.display = "none"
+      changePasswordRow.style.display = "flex"
+    }
+  }
+
+  document.querySelector("form").addEventListener("submit", function (event) {
+    var newPassword = document.getElementById("newPassword").value
+    var confirmPassword = document.getElementById("confirmPassword").value
+
+    if (newPassword !== confirmPassword) {
+      alert("New password and confirm password do not match.")
+      event.preventDefault()
+    }
+  })
+
+  $(document).ready(function() {
+        $('.cancel-btn').on('click', function(){
+            var $this = $(this);
+            var orderId = $this.data('order-id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will cancel this order and your refund will return as a credit in your account!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#000',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, cancel it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $this.closest('form').submit();
+                }
+            });
+        });
+    });
+
+var orderDetailUrlTemplate = "{{ url_for('customer.view_order_detail', order_id=0) }}";
+function markAsViewed(element) {
+    const orderId = element.getAttribute('data-order-id');
+    const url = orderDetailUrlTemplate.replace('/0', '/' + orderId);
+    sessionStorage.setItem('viewed-' + orderId, 'true');
+    updateBellIcon(orderId);
+    window.location.href = url;
+}
+
+function updateBellIcon(orderId) {
+    const bellIcon = document.getElementById('bell-icon-' + orderId);
+    if (sessionStorage.getItem('viewed-' + orderId)  || !order_changed[orderId]) {
+      bellIcon.style.display = 'none';
+    } else {
+      bellIcon.style.display = 'inline'
+    }
+        
+    }
+
+document.addEventListener('DOMContentLoaded', function() {
+    {% for order in order_history %}
+        updateBellIcon({{ order[0] }});
+    {% endfor %}
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    function formatNZDateTime(dateTimeString) {
+        let date = new Date(dateTimeString);
+        return date.toLocaleString("en-NZ", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+            timeZone: "Pacific/Auckland"
+        });
+    }
+
+    document.querySelectorAll(".message-date").forEach(function(element) {
+        element.textContent = formatNZDateTime(element.textContent);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    function formatNZDateTime(dateTimeString) {
+        let date = new Date(dateTimeString);
+        return date.toLocaleString("en-NZ", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            timeZone: "Pacific/Auckland"
+        });
+    }
+
+    document.querySelectorAll(".date-of-birth").forEach(function(element) {
+        element.textContent = formatNZDateTime(element.textContent);
+    });
+});
+
+</script>
+{% endblock %}

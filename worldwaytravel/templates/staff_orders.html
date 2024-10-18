@@ -1,0 +1,193 @@
+<!-- staff_orders.html -->
+{% extends 'layout.html' %} {% block title %}Orders{% endblock %} {% block
+    content %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Orders</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+      <li><strong>{{ message }}</strong></li>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+<body>
+<h1 style="text-align: center;">Orders</h1>
+
+<div class="orders-container">
+    <div>
+    <form id="searchForm" method="GET" action="{{ url_for('staff.orders') }}" class="d-flex align-items-center">
+        <input type="text" name="search" placeholder="Enter order ID or customer name" class="form-control" required>
+        <button type="submit" class="btn btn-primary mt-2"  style="background-color: #000;border-color: #000;">Search</button>
+    </form>
+    <hr>
+        <div class="btn-group" role="group" aria-label="Order Status" style="width: 100%;">
+            <a href="{{ url_for('staff.orders', status='All') }}" class="btn btn-secondary {{ 'active' if current_status =='All' else '' }}">All Orders</a>
+            <a href="{{ url_for('staff.orders', status='Pending') }}" class="btn btn-secondary {{ 'active' if current_status =='Pending' else '' }}">Pending<br/>(shopping cart)</a>
+            <a href="{{ url_for('staff.orders', status='Progressing') }}" class="btn btn-secondary {{ 'active' if current_status =='Progressing' else '' }}">Progressing<br/>(paid)</a>
+{#            <a href="{{ url_for('staff.orders', status='Shipped') }}" class="btn btn-secondary {{ 'active' if current_status =='Shipped' else '' }}">Shipped</a>#}
+{#            <a href="{{ url_for('staff.orders', status='Delivered') }}" class="btn btn-secondary {{ 'active' if current_status =='Delivered' else '' }}">Delivered</a>#}
+            <a href="{{ url_for('staff.orders', status='Confirmed') }}" class="btn btn-secondary {{ 'active' if current_status =='Confirmed' else '' }}">Confirmed<br/>(seat reserved)</a>
+            <a href="{{ url_for('staff.orders', status='Completed') }}" class="btn btn-secondary {{ 'active' if current_status =='Completed' else '' }}">Completed<br/>(departure)</a>
+            <a href="{{ url_for('staff.orders', status='Cancelled') }}" class="btn btn-secondary {{ 'active' if current_status =='Cancelled' else '' }}">Cancelled</a>
+        </div>
+        <hr>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Order Date</th>
+                    <th>Products</th>
+{#                    <th>Shipping</th>#}
+                    <th>Total Cost</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order[0] }}</td>
+                    <td>{{ order[1] }}</td>
+                    <td>{{ order[2] }}</td>
+                    <td>
+                        {% if order[5] %}
+                            {% for detail in order[5].split(';') %}
+                                {% set parts = detail.split('|') %}
+                                {% if parts|length >=2 %}
+                                    <div class="product-details">
+                                        <div class="product-info">
+                                            <img class="order-product-image" src="{{ url_for('static', filename='producting/' + parts[1]) }}" alt="{{ parts[0].split(': ')[0] }} Image" style="width: 50px; height: auto;">
+                                            <span class="product-name">{{ parts[0].split(': ')[0] }}</span>
+                                            <span> - Quantity: {{ parts[0].split(': ')[1] }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <p></p>
+                        {% endif %}
+                    </td>
+{#                    <td>{{ order[6] }} ${{ order[7] }}</td>#}
+                    <td>${{ order[3] }}</td>
+                    <td>{{ order[4] }}</td>
+                    <td>
+                        {% if order[4] == 'Pending' %}
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">
+                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>
+                            </form> 
+                        {% endif %}
+                        {% if order[4] == 'Progressing' and 'pick_up' in order[6] %}
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Delivered') }}">
+                                <button type="button" class="btn btn-success btn-sm action-btn" data-action="ready" data-order-id="{{ order[0] }}">Ready</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">
+                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>
+                            </form>
+{#                        {% elif order[4] == 'Progressing' %}#}
+{#                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Shipped') }}">#}
+{#                                <button type="button" class="btn btn-success btn-sm action-btn" data-action="ship" data-order-id="{{ order[0] }}">Ship</button>#}
+{#                            </form>#}
+{#                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">#}
+{#                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>#}
+{#                            </form>#}
+{#                        {% endif %}#}
+                        {% elif order[4] == 'Progressing' %}
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Confirmed') }}">
+                                <button type="button" class="btn btn-success btn-sm action-btn" data-action="confirm" data-order-id="{{ order[0] }}">Confirm</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">
+                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>
+                            </form>
+                        {% endif %}
+                        {% if order[4] == 'Shipped' %}
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Delivered') }}">
+                                <button type="button" class="btn btn-primary btn-sm action-btn" data-action="delivery" data-order-id="{{ order[0] }}">Delivered</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">
+                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>
+                            </form>
+                        {% endif %}
+                        {% if order[4] == 'Delivered' %}
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Completed') }}">
+                                <button type="button" class="btn btn-info btn-sm action-btn" data-action="complete" data-order-id="{{ order[0] }}">Completed</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">
+                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>
+                            </form>
+                        {% endif %}
+                        {% if order[4] == 'Confirmed' %}
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Completed') }}">
+                                <button type="button" class="btn btn-info btn-sm action-btn" data-action="complete" data-order-id="{{ order[0] }}">Departure</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('staff.update_order_status', order_id=order[0], new_status='Cancelled') }}">
+                                <button type="button" class="btn btn-danger btn-sm action-btn" data-action="cancel" data-order-id="{{ order[0] }}">Cancel</button>
+                            </form>
+                        {% endif %}
+                        {% if order[4] == 'Completed' %}
+                            
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).on('submit', 'form', function(e){
+        if (this.id === 'searchForm') {
+            return;
+        };
+    });
+
+    $(document).ready(function() {
+        $('.action-btn').on('click', function(){
+            var $this = $(this);
+            var orderId = $this.data('order-id');
+            var action = $this.data('action');
+            var actionText = '';
+
+            if (action === 'cancel') {
+                actionText = 'cancel this order';
+            } else if (action === 'ship') {
+                actionText = 'ship this order';
+            } else if (action === 'confirm') {
+                actionText = 'confirm the seating for this order';
+            } else if (action === 'delivery') {
+                actionText = 'mark this order as delivered';
+            } else if (action === 'complete') {
+                actionText = 'mark this order as completed';
+            } else if (action === 'ready') {
+                actionText = 'mark this order as ready for picked up';
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will " + actionText + "!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, do it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $this.closest('form').submit();
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+
+
+
+{% endblock %}

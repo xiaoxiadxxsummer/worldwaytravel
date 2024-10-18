@@ -1,0 +1,42 @@
+<button
+  class="btn"
+  type="button"
+  data-bs-toggle="offcanvas"
+  data-bs-target="#staticBackdrop"
+  aria-controls="staticBackdrop"
+>
+  <i class="fas fa-bars"></i> Menu
+</button>
+
+<div
+  class="offcanvas offcanvas-start"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  id="staticBackdrop"
+  aria-labelledby="staticBackdropLabel"
+>
+  <div class="offcanvas-header">
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <a href="{{ url_for('staff.staff_dashboard')}}"
+      ><i class="fas fa-chart-line"></i> Dashboard</a
+    ><br />
+    <a href="{{ url_for('staff.staff_profile')}}"
+      ><i class="fas fa-user"></i> Profile</a
+    ><br />
+    <a href="{{ url_for('staff.staff_products')}}"
+      ><i class="fas fa-boxes"></i> Products</a
+    ><br />
+    <a href=""><i class="fas fa-shopping-cart"></i> Customer Orders</a><br />
+    <a href="{{ url_for('staff.staff_inventory')}}"
+          ><i class="fas fa-warehouse"></i>Inventory</a
+        ><br />
+    <a href=""><i class="fas fa-envelope"></i> Messages</a><br />
+  </div>
+</div>

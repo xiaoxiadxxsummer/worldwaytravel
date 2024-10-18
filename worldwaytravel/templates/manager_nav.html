@@ -1,0 +1,49 @@
+<button
+  class="btn"
+  type="button"
+  data-bs-toggle="offcanvas"
+  data-bs-target="#staticBackdrop"
+  aria-controls="staticBackdrop"
+>
+  <i class="fas fa-bars"></i> Menu
+</button>
+
+<div
+  class="offcanvas offcanvas-start"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  id="staticBackdrop"
+  aria-labelledby="staticBackdropLabel"
+>
+  <div class="offcanvas-header">
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <a href="{{ url_for('manager.manager_dashboard')}}"
+      ><i class="fas fa-user"></i> My Dashboard</a
+    ><br />
+    <a href="{{ url_for('manager.manager_profile')}}"
+      ><i class="fas fa-user"></i> My Profile</a
+    ><br />
+    <a href="{{ url_for('manager.manage_customer') }}"
+      ><i class="fas fa-user-cog"></i> Manage Customers</a
+    ><br />
+    <a href="{{ url_for('manager.manage_staff') }}"
+      ><i class="fas fa-user-tie"></i> Manage Staff</a
+    ><br />
+    <a href=""><i class="fas fa-boxes"></i> Products</a><br />
+    <a href=""><i class="fas fa-shopping-cart"></i> Customer Orders</a><br />
+    <a href=""><i class="fas fa-warehouse"></i> Inventory</a><br />
+    <a href=""><i class="fas fa-trophy"></i> Manage Points</a><br />
+    <a href=""><i class="fas fa-chart-line"></i> Reports</a><br />
+    <a href=""><i class="fas fa-user-cog"></i> Manage Account</a><br />
+    <a href=""><i class="fas fa-credit-card"></i> Manage Credit Limit</a><br />
+    <a href=""><i class="fas fa-newspaper"></i> Manage News</a><br />
+    <a href=""><i class="fas fa-envelope"></i> Messages</a><br />
+  </div>
+</div>

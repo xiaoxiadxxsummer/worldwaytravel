@@ -1,0 +1,136 @@
+<!-- staff_dashboard.html -->
+{% extends 'layout.html' %} {% block title %}Staff Dashboard{% endblock %} {%
+block content %} 
+<h2 style="text-align: center">Welcome to Your Dashboard</h2>
+
+<div style="display: -webkit-flex;">
+  <!--Profile card-->
+{#  <div class="row mt-4">#}
+    {#<div class="col-md-4">
+      <a href="{{ url_for('staff.staff_profile') }}" class="card-link">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-user" style="font-size: 2rem"></i>My Profile</h5>
+            <p class="card-text">View and update profile information and change password.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  <!--Product card-->
+  <div class="col-md-4">
+    <a href="{{ url_for('staff.staff_products') }}" class="card-link">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-boxes" style="font-size: 2rem"></i>Products</h5>
+          <p class="card-text">View and update product details such as price, descriptions, and images.</p>
+        </div>
+      </div>
+    </a>
+  </div>#}
+<!--Order card-->
+<div class="col-md-4">
+  <a href="{{ url_for('staff.orders') }}" class="card-link">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-shopping-cart" style="font-size: 2rem"></i>Customer Orders</h5>
+        <p class="card-text">View and manage customer orders.</p>
+      </div>
+    </div>
+  </a>
+</div>
+{#
+<!--Inventory card-->
+<div class="col-md-4">
+  <a href="{{ url_for('staff.staff_inventory') }}" class="card-link">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-warehouse" style="font-size: 2rem"></i>Inventory</h5>
+        <p class="card-text">View and update product stock.</p>
+      </div>
+    </div>
+  </a>
+</div>#}
+<!--Message card-->
+<div class="col-md-4">
+  <a href="{{ url_for('staff.view_messages') }}" class="card-link">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-envelope" style="font-size: 2rem"></i>View Customer Messages</h5>
+        <p class="card-text">View and reply messages from customers.</p>
+      </div>
+    </div>
+  </a>
+</div>
+
+
+
+
+</div>
+
+<div>
+  <h3>Your profile details:</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table">
+        <tr>
+          <td>Username:</td>
+          <td>{{ staff_info[1] }}</td>
+        </tr>
+        <tr>
+          <td>Title:</td>
+          <td>{{ staff_profile[3] }}</td>
+        </tr>
+        <tr>
+          <td>First Name:</td>
+          <td>{{ staff_profile[1] }}</td>
+        </tr>
+        <tr>
+          <td>Last Name:</td>
+          <td>{{ staff_profile[2] }}</td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td>{{ staff_profile[5] }}</td>
+        </tr>
+        <tr>
+          <td>Phone Number:</td>
+          <td>{{ staff_profile[6] }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6">
+      {% if staff_profile[7] %} {% if staff_profile[7].startswith('uploads/') %}
+
+      <img
+        src="{{ url_for('static', filename=staff_profile[7]) }}"
+        alt="Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/' + staff_profile[7]) }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %} {% else %}
+      <img
+        src="{{ url_for('static', filename='uploads/profile.jpg') }}"
+        alt="Default Profile Image"
+        class="img-thumbnail"
+        style="max-width: 200px; border-radius: 10px"
+      />
+      {% endif %}
+    </div>
+  </div>
+<div class="col-auto">
+        <a
+          href="{{ url_for('staff.staff_profile_edit')}}"
+          class="btn btn-primary"
+           style="background-color: #000;border-color: #000;"
+          >Edit My Profile</a
+        >
+      </div>
+</div>
+{% endblock %}
